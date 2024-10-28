@@ -38,11 +38,15 @@ import com.onean.momo.ui.tarot_topic_select.TarotTopicSelectScreen
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
 
-
 @Composable
-fun MainNavigation() {
+fun MainNavigation(
+    modifier: Modifier = Modifier
+) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "tarot_opening") {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = "tarot_opening") {
         composable("tarot_opening") {
             TarotOpeningScreen(
                 modifier = Modifier,
@@ -74,10 +78,12 @@ fun MainNavigation() {
                 onEvent = { event ->
                     when (event) {
                         is TaroQuestionInputDest.DrawCardScreen -> {
-                            navController.navigate(DrawCard(
-                                topic = topic,
-                                questionText = event.questionText
-                            ))
+                            navController.navigate(
+                                DrawCard(
+                                    topic = topic,
+                                    questionText = event.questionText
+                                )
+                            )
                         }
                     }
                 }
@@ -107,5 +113,6 @@ fun MainNavigation() {
 
 @Serializable
 data class TaroQuestionInput(val topic: String)
+
 @Serializable
-data class DrawCard(val topic:String, val questionText: String)
+data class DrawCard(val topic: String, val questionText: String)

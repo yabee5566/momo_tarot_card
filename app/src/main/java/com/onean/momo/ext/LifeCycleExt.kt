@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 
-
 @Composable
 fun OnLifecycle(
     onCreate: () -> Unit = {},

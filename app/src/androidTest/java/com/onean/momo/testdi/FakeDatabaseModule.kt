@@ -16,21 +16,20 @@
 
 package com.onean.momo.testdi
 
+import com.onean.momo.data.TarotReadingRecordRepository
+import com.onean.momo.data.di.DataModule
+import com.onean.momo.data.di.FakeTarotReadingRecordRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
-import com.onean.momo.data.TarotReadingRecordRepository
-import com.onean.momo.data.di.DataModule
-import com.onean.momo.data.di.FakeTarotReadingRecordRepository
 
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
     replaces = [DataModule::class]
 )
-interface FakeDataModule {
-
+interface FakeDatabaseModule {
     @Binds
     abstract fun bindRepository(
         fakeRepository: FakeTarotReadingRecordRepository

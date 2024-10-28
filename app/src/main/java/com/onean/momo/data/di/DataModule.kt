@@ -16,16 +16,16 @@
 
 package com.onean.momo.data.di
 
+import com.onean.momo.data.DefaultTarotReadingRecordRepo
+import com.onean.momo.data.TarotReadingRecordRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import com.onean.momo.data.TarotReadingRecordRepository
-import com.onean.momo.data.DefaultTarotReadingRecordRepo
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 @Module
 @InstallIn(SingletonComponent::class)

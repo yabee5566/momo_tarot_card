@@ -20,6 +20,8 @@ media3 = "1.4.1"
 timber = "5.0.1"
 kotlinSerialization = "1.3.0"
 kotlinxCollectionsImmutable = "0.3.7"
+kotlinterPlugin = "4.3.0"
+composeRulesPlugin = "0.4.10"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -56,6 +58,7 @@ media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", versi
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
+compose-rules-plugin = { module = "io.nlopez.compose.rules:ktlint", version.ref = "composeRulesPlugin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -66,3 +69,4 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 hilt-gradle = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinterPlugin" }

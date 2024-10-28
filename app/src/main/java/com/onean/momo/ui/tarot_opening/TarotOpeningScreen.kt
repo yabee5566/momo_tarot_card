@@ -36,7 +36,6 @@ fun TarotOpeningScreen(
             color = Color.White,
             fontSize = 20.sp
         )
-
     }
 }
 
@@ -47,4 +46,3 @@ private fun TarotOpeningScreenPreview() {
         onStartTarotClick = {}
     )
 }
-

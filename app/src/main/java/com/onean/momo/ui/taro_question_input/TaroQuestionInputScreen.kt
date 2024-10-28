@@ -11,7 +11,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -22,12 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun TaroQuestionInputScreen(
-    modifier: Modifier,
     uiState: TaroQuestionInputUiState,
-    onQuestionSubmit: () -> Unit
+    onQuestionSubmit: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     TaroQuestionInputScreen(
         modifier = modifier,
@@ -39,10 +37,10 @@ fun TaroQuestionInputScreen(
 
 @Composable
 fun TaroQuestionInputScreen(
-    modifier: Modifier,
     topic: String,
     questionTextFieldState: TextFieldState,
-    onQuestionSubmit: () -> Unit
+    onQuestionSubmit: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,

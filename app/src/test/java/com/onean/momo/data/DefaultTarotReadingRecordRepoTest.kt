@@ -16,6 +16,8 @@
 
 package com.onean.momo.data
 
+import com.onean.momo.data.local.database.TarotReadingRecord
+import com.onean.momo.data.local.database.TarotReadingRecordDao
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -23,8 +25,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import com.onean.momo.data.local.database.TarotReadingRecord
-import com.onean.momo.data.local.database.TarotReadingRecordDao
 
 /**
  * Unit tests for [DefaultTarotReadingRecordRepo].
@@ -40,7 +40,6 @@ class DefaultTarotReadingRecordRepoTest {
 
         assertEquals(repository.tarotReadingRecords.first().size, 1)
     }
-
 }
 
 private class FakeTarotReadingRecordDao : TarotReadingRecordDao {

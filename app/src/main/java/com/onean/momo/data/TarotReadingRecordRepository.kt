@@ -16,11 +16,11 @@
 
 package com.onean.momo.data
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import com.onean.momo.data.local.database.TarotReadingRecord
 import com.onean.momo.data.local.database.TarotReadingRecordDao
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 interface TarotReadingRecordRepository {
     val tarotReadingRecords: Flow<List<String>>

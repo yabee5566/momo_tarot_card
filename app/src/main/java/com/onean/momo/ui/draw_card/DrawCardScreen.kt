@@ -12,14 +12,14 @@ fun DrawCardScreen(
     onCardDraw: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column{
+    Column {
         // FIXME: fill in here
     }
 }
 
 @Preview
 @Composable
-fun DrawCardScreenPreview() {
+private fun DrawCardScreenPreview() {
     DrawCardScreen(
         topic = "career",
         questionText = "should i quit my job",

@@ -45,11 +45,11 @@ fun TarotTopicSelectScreen(
             items(topicList.size) { index ->
                 Text(
                     modifier = Modifier
+                        .clip(CircleShape)
                         .clickable {
                             onTopicSelected(topicList[index])
                         }
                         .width(100.dp)
-                        .clip(CircleShape)
                         .background(Color.Green)
                         .padding(8.dp),
                     textAlign = TextAlign.Center,

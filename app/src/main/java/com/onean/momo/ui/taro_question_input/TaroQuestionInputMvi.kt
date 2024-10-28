@@ -7,6 +7,6 @@ data class TaroQuestionInputUiState(
     val questionTextInput: TextFieldState = TextFieldState()
 )
 
-sealed class TaroQuestionInputDest{
-    data class DrawCardScreen(val questionText: String): TaroQuestionInputDest()
+sealed class TaroQuestionInputDest {
+    data class DrawCardScreen(val questionText: String) : TaroQuestionInputDest()
 }

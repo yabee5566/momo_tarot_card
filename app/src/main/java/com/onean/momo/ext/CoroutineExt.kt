@@ -1,6 +1,5 @@
 package com.onean.momo.ext
 
-
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -134,4 +133,3 @@ suspend inline fun <T : Any, R : Any> Iterable<T>.mapConcurrentlyIndexed(
         }
     }.awaitAll()
 }
-

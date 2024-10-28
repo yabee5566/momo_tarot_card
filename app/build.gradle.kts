@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+buildscript {
+    dependencies {
+        classpath(libs.compose.rules.plugin)
+    }
+}
 @Suppress("DSL_SCOPE_VIOLATION") // Remove when fixed https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
     alias(libs.plugins.android.application)
@@ -23,6 +28,7 @@ plugins {
     alias(libs.plugins.hilt.gradle)
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinter)
 }
 
 android {

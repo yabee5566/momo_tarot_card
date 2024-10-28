@@ -44,10 +44,4 @@ internal fun TarotReadingRecordScreen(
     onSave: (name: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-
-
-
-
-
 }
