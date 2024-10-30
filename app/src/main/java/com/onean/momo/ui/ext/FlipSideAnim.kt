@@ -88,7 +88,7 @@ private fun FlipSideAnimPreview() {
                 targetValue = if (isOpen) 0.3F else 1F,
                 animationSpec = tween(2000)
             )
-            val cardSize = (200*sizeRatio).dp
+            val cardSize = (200 * sizeRatio).dp
             FlipSideAnim(
                 modifier = Modifier
                     .size(cardSize)
@@ -105,7 +105,6 @@ private fun FlipSideAnimPreview() {
                         modifier = Modifier.size(cardSize),
                         id = R.drawable.purple_star
                     )
-
                 },
                 onOpenClick = { isOpen = true },
                 onFoldClick = { isOpen = false }
