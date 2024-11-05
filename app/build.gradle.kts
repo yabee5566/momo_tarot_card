@@ -101,6 +101,10 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
+    // moshi
+    ksp(libs.moshi.kotlin.codegen)
+    implementation(libs.moshi)
+
     // Hilt and instrumented tests.
     androidTestImplementation(libs.hilt.android.testing)
     kaptAndroidTest(libs.hilt.android.compiler)
@@ -133,6 +137,9 @@ dependencies {
 
     // serialization
     implementation(libs.serialization)
+
+    // Gemini
+    implementation(libs.gemini.ai.client)
 
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)

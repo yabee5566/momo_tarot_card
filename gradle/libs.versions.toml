@@ -17,12 +17,14 @@ kotlin = "2.0.21"
 ksp = "2.0.21-1.0.26"
 coil = "2.7.0"
 media3 = "1.4.1"
+moshi = "1.15.1"
 secretsGradlePlugin = "2.0.1"
 timber = "5.0.1"
 kotlinSerialization = "1.3.0"
 kotlinxCollectionsImmutable = "0.3.7"
 kotlinterPlugin = "4.3.0"
 composeRulesPlugin = "0.4.10"
+gemniAIClient = "0.9.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -56,11 +58,14 @@ coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 compose-rules-plugin = { module = "io.nlopez.compose.rules:ktlint", version.ref = "composeRulesPlugin" }
+gemini-ai-client = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "gemniAIClient" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

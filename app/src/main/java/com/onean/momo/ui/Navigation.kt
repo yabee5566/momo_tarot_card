@@ -23,19 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
-import com.onean.momo.ext.CollectFlowWithLifecycle
-import com.onean.momo.ui.draw_card.DrawCardScreen
-import com.onean.momo.ui.taro_question_input.TaroQuestionInputDest
-import com.onean.momo.ui.taro_question_input.TaroQuestionInputScreen
-import com.onean.momo.ui.taro_question_input.TaroQuestionInputViewModel
-import com.onean.momo.ui.taro_question_input.TaroQuestionInputViewModelFactory
 import com.onean.momo.ui.tarot_opening.TarotOpeningScreen
-import com.onean.momo.ui.tarot_topic_select.TarotTopicSelectScreen
-import kotlinx.collections.immutable.toImmutableList
+import com.onean.momo.ui.tarot_session.TarotSessionScreen
+import com.onean.momo.ui.tarot_session.TarotSessionUiAction
+import com.onean.momo.ui.tarot_session.TarotSessionViewModel
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -51,10 +46,27 @@ fun MainNavigation(
             TarotOpeningScreen(
                 modifier = Modifier,
                 onStartTarotClick = {
-                    navController.navigate("tarot_topic_select")
+                    navController.navigate("tarot_session")
                 }
             )
         }
+        composable("tarot_session") {
+            val viewModel: TarotSessionViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            TarotSessionScreen(
+                uiState = uiState,
+                onUiAction = {
+                    when (it) {
+                        is TarotSessionUiAction.SetupTopic -> viewModel.onTopicSelected(it.topic)
+                        is TarotSessionUiAction.ReplyQuestion -> viewModel.onQuestionReply(it.chat)
+                        TarotSessionUiAction.ByeBye -> viewModel.onByeBye()
+                        TarotSessionUiAction.DrawCard -> viewModel.onDrawCard()
+                    }
+                },
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+        /*
         composable("tarot_topic_select") {
             TarotTopicSelectScreen(
                 modifier = Modifier.padding(16.dp),
@@ -108,6 +120,7 @@ fun MainNavigation(
                 }
             )
         }
+         */
     }
 }
 
