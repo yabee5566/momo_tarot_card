@@ -17,6 +17,7 @@
 buildscript {
     dependencies {
         classpath(libs.compose.rules.plugin)
+        classpath(libs.secrets.gradle.plugin)
     }
 }
 @Suppress("DSL_SCOPE_VIOLATION") // Remove when fixed https://youtrack.jetbrains.com/issue/KTIJ-19369
@@ -29,6 +30,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinter)
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
@@ -72,7 +74,7 @@ android {
     buildFeatures {
         compose = true
         aidl = false
-        buildConfig = false
+        buildConfig = true
         renderScript = false
         shaders = false
     }
@@ -98,6 +100,10 @@ dependencies {
     // Hilt Dependency Injection
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    // moshi
+    ksp(libs.moshi.kotlin.codegen)
+    implementation(libs.moshi)
 
     // Hilt and instrumented tests.
     androidTestImplementation(libs.hilt.android.testing)
@@ -131,6 +137,9 @@ dependencies {
 
     // serialization
     implementation(libs.serialization)
+
+    // Gemini
+    implementation(libs.gemini.ai.client)
 
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
