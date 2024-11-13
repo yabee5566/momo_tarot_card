@@ -2,6 +2,9 @@ package com.onean.momo.data.network.repo.ai
 
 import com.google.ai.client.generativeai.Chat
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.BlockThreshold
+import com.google.ai.client.generativeai.type.HarmCategory
+import com.google.ai.client.generativeai.type.SafetySetting
 import com.google.ai.client.generativeai.type.content
 import com.google.ai.client.generativeai.type.generationConfig
 import com.onean.momo.BuildConfig
@@ -19,7 +22,7 @@ interface TarotAiRepo {
     suspend fun setupQuestionCategory(category: String): TarotTellerResponse
     suspend fun replyQuestion(reply: String): TarotTellerResponse
     suspend fun drawCard(): TarotTellerResponse
-    suspend fun endSession(): TarotTellerResponse
+    suspend fun endSession()
 }
 
 class TarotAiRepoImpl @Inject constructor(
@@ -28,6 +31,12 @@ class TarotAiRepoImpl @Inject constructor(
     private val aiModel = GenerativeModel(
         "gemini-1.5-flash",
         BuildConfig.gemni_apiKey,
+        safetySettings = listOf(
+            SafetySetting(HarmCategory.SEXUALLY_EXPLICIT, BlockThreshold.ONLY_HIGH),
+            SafetySetting(HarmCategory.DANGEROUS_CONTENT, BlockThreshold.ONLY_HIGH),
+            SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.ONLY_HIGH),
+            SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.ONLY_HIGH)
+        ),
         generationConfig = generationConfig {
             temperature = 1f
             topK = 64
@@ -74,6 +83,7 @@ class TarotAiRepoImpl @Inject constructor(
             throw IllegalStateException("currentChat == null")
         }
         val responseText = currentChat?.sendMessage(requestAdapter.toJson(request))?.text
+        Timber.d("responseText: $responseText ")
         return responseText?.let { responseAdapter.fromJson(it) } ?: throw IOException("response chat == null")
     }
 
@@ -83,17 +93,16 @@ class TarotAiRepoImpl @Inject constructor(
             throw IllegalStateException("currentChat == null")
         }
         val responseText = currentChat?.sendMessage(requestAdapter.toJson(request))?.text
+        Timber.d("responseText: $responseText ")
         return responseText?.let { responseAdapter.fromJson(it) } ?: throw IOException("response chat == null")
     }
 
-    override suspend fun endSession(): TarotTellerResponse {
+    override suspend fun endSession() {
         val request = TaroUserRequest(action = "end_game")
         if (currentChat == null) {
             throw IllegalStateException("currentChat == null")
         }
-        val responseText = currentChat?.sendMessage(requestAdapter.toJson(request))?.text
-        val response = responseText?.let { responseAdapter.fromJson(it) } ?: throw IOException("response chat == null")
+        currentChat?.sendMessage(requestAdapter.toJson(request))?.text
         currentChat = null
-        return response
     }
 }

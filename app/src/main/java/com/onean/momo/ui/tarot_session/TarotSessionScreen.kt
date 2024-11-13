@@ -49,21 +49,14 @@ fun TarotSessionScreen(
             modifier = Modifier
                 .padding(horizontal = 13.dp)
                 .align(Alignment.Center),
-            text = when (uiState) {
-                is TarotSessionUiState.PendingTopicSetup -> uiState.tellerChat
-                is TarotSessionUiState.PendingByeBye -> uiState.tellerChat
-                is TarotSessionUiState.PendingDrawCard -> uiState.tellerChat
-                is TarotSessionUiState.PendingReplyQuestion -> uiState.tellerChat
-                is TarotSessionUiState.Error -> uiState.tellerChat
-                is TarotSessionUiState.Terminated -> uiState.tellerChat
-            },
+            text = uiState.tellerChat,
             color = Color.White,
             fontSize = 32.sp,
             fontWeight = FontWeight.SemiBold
         )
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            when (uiState) {
-                is TarotSessionUiState.PendingTopicSetup -> {
+            when (uiState.step) {
+                TarotSessionStep.SETUP_TOPIC -> {
                     ChooseTopicBlock(
                         topicList = listOf("Love", "Career", "Health").toImmutableList(),
                         onTopicClick = {
@@ -72,7 +65,7 @@ fun TarotSessionScreen(
                     )
                 }
 
-                is TarotSessionUiState.PendingReplyQuestion -> {
+                TarotSessionStep.REPLY_QUESTION -> {
                     val replyTextFieldState = rememberTextFieldState()
                     ReplyQuestionBlock(
                         replyTextFieldState = replyTextFieldState,
@@ -83,7 +76,7 @@ fun TarotSessionScreen(
                     )
                 }
 
-                is TarotSessionUiState.PendingDrawCard -> {
+                TarotSessionStep.DRAW_CARD -> {
                     DrawCardBlock(
                         onDrawCardClick = {
                             onUiAction(TarotSessionUiAction.DrawCard)
@@ -91,20 +84,31 @@ fun TarotSessionScreen(
                     )
                 }
 
-                is TarotSessionUiState.PendingByeBye -> {
-                    SayByeByeBlock(
-                        onByeByeClick = {
-                            onUiAction(TarotSessionUiAction.ByeBye)
+                TarotSessionStep.BYE_BYE -> {
+                    ActionButtonBlock(
+                        actionText = "Bye Bye",
+                        onActionClick = {
+                            onUiAction(TarotSessionUiAction.EndSession)
                         }
                     )
                 }
 
-                is TarotSessionUiState.Error -> {
-                    // FIXME:
+                TarotSessionStep.ERROR -> {
+                    ActionButtonBlock(
+                        actionText = "好啦！",
+                        onActionClick = {
+                            onUiAction(TarotSessionUiAction.BeGoodBoyClick)
+                        }
+                    )
                 }
 
-                is TarotSessionUiState.Terminated -> {
-                    // FIXME:
+                TarotSessionStep.TERMINATED -> {
+                    ActionButtonBlock(
+                        actionText = "結束",
+                        onActionClick = {
+                            onUiAction(TarotSessionUiAction.EndSession)
+                        }
+                    )
                 }
             }
         }
@@ -211,15 +215,16 @@ private fun DrawCardBlock(
 }
 
 @Composable
-private fun SayByeByeBlock(
-    onByeByeClick: () -> Unit,
+private fun ActionButtonBlock(
+    actionText: String,
+    onActionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Text(
         modifier = modifier
             .chipModifier()
-            .safeClickable(onClick = onByeByeClick),
-        text = "Bye Bye",
+            .safeClickable(onClick = onActionClick),
+        text = actionText,
         fontSize = 22.sp
     )
 }
@@ -231,9 +236,10 @@ private fun TarotSessionScreenPreview() {
         modifier = Modifier
             .background(Color.White)
             .fillMaxSize(),
-        uiState = TarotSessionUiState.PendingTopicSetup(
+        uiState = TarotSessionUiState(
             tellerChat = "請選擇你想問的問題類型",
-            topicList = persistentListOf("Love", "Career", "Health")
+            topicList = persistentListOf("Love", "Career", "Health"),
+            step = TarotSessionStep.SETUP_TOPIC
         ),
         onUiAction = {},
     )

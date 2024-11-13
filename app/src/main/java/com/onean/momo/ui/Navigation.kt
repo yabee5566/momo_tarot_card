@@ -23,15 +23,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.onean.momo.ext.CollectFlowWithLifecycle
 import com.onean.momo.ui.tarot_opening.TarotOpeningScreen
+import com.onean.momo.ui.tarot_session.TarotSessionNavigation
 import com.onean.momo.ui.tarot_session.TarotSessionScreen
 import com.onean.momo.ui.tarot_session.TarotSessionUiAction
 import com.onean.momo.ui.tarot_session.TarotSessionViewModel
-import kotlinx.serialization.Serializable
 
 @Composable
 fun MainNavigation(
@@ -53,79 +53,24 @@ fun MainNavigation(
         composable("tarot_session") {
             val viewModel: TarotSessionViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            CollectFlowWithLifecycle(viewModel::navigation) {
+                when (it) {
+                    TarotSessionNavigation.Opening -> navController.navigate("tarot_opening")
+                }
+            }
             TarotSessionScreen(
+                modifier = Modifier.padding(16.dp),
                 uiState = uiState,
                 onUiAction = {
                     when (it) {
                         is TarotSessionUiAction.SetupTopic -> viewModel.onTopicSelected(it.topic)
                         is TarotSessionUiAction.ReplyQuestion -> viewModel.onQuestionReply(it.chat)
-                        TarotSessionUiAction.ByeBye -> viewModel.onByeBye()
+                        TarotSessionUiAction.EndSession -> viewModel.onEndSession()
                         TarotSessionUiAction.DrawCard -> viewModel.onDrawCard()
-                    }
-                },
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-        /*
-        composable("tarot_topic_select") {
-            TarotTopicSelectScreen(
-                modifier = Modifier.padding(16.dp),
-                topicList = listOf("Love", "Career", "Health").toImmutableList(),
-                onTopicSelected = { topic ->
-                    navController.navigate(TaroQuestionInput(topic))
-                }
-            )
-        }
-
-        composable<TaroQuestionInput> { backStackEntry ->
-            val topic = backStackEntry.toRoute<TaroQuestionInput>().topic
-            val viewModel: TaroQuestionInputViewModel = hiltViewModel(
-                creationCallback = { factory: TaroQuestionInputViewModelFactory ->
-                    factory.create(topic)
-                }
-            )
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-            CollectFlowWithLifecycle(
-                flow = { viewModel.navEvent },
-                onEvent = { event ->
-                    when (event) {
-                        is TaroQuestionInputDest.DrawCardScreen -> {
-                            navController.navigate(
-                                DrawCard(
-                                    topic = topic,
-                                    questionText = event.questionText
-                                )
-                            )
-                        }
+                        TarotSessionUiAction.BeGoodBoyClick -> viewModel.onBeGoodBoyClick()
                     }
                 }
             )
-
-            TaroQuestionInputScreen(
-                modifier = Modifier,
-                uiState = uiState,
-                onQuestionSubmit = viewModel::onQuestionSubmit
-            )
         }
-        composable<DrawCard> { backStackEntry ->
-            val params = backStackEntry.toRoute<DrawCard>()
-            val topic = params.topic
-            val questionText = params.questionText
-            DrawCardScreen(
-                modifier = Modifier,
-                topic = topic,
-                questionText = questionText,
-                onCardDraw = {
-                    // FIXME: fill in here
-                }
-            )
-        }
-         */
     }
 }
-
-@Serializable
-data class TaroQuestionInput(val topic: String)
-
-@Serializable
-data class DrawCard(val topic: String, val questionText: String)
