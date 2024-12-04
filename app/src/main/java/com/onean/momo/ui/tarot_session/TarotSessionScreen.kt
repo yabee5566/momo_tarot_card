@@ -21,7 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -172,8 +174,9 @@ private fun ReplyQuestionBlock(
                 modifier = Modifier
                     .padding(horizontal = 32.dp, vertical = 8.dp)
                     .weight(1F),
-                textStyle = TextStyle(fontSize = 18.sp),
                 state = replyTextFieldState,
+                textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+                cursorBrush = SolidColor(Color.White),
                 decorator = { innerTextField ->
                     Box(
                         modifier = Modifier.fillMaxWidth(),
