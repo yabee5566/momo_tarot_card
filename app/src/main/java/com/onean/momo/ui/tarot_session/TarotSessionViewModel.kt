@@ -3,6 +3,7 @@ package com.onean.momo.ui.tarot_session
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.onean.momo.data.network.repo.ai.TarotAiRepo
+import com.onean.momo.data.network.repo.ai.TarotSessionTellerAction
 import com.onean.momo.data.network.response.TarotTellerResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -58,28 +59,28 @@ class TarotSessionViewModel @Inject constructor(
 
     private fun handleResponse(response: TarotTellerResponse) {
         when (response.action) {
-            "ask_further_question" -> {
+            TarotSessionTellerAction.ASK_FURTHER_QUESTION.action -> {
                 val chat = response.chat ?: return
                 _uiState.update {
                     it.copy(step = TarotSessionStep.REPLY_QUESTION, tellerChat = chat)
                 }
             }
 
-            "ask_to_draw_card", "explain_card_drew_and_ask_draw_next" -> {
+            TarotSessionTellerAction.ASK_TO_DRAW_ALL_CARDS.action -> {
                 val chat = response.chat ?: return
                 _uiState.update {
                     it.copy(step = TarotSessionStep.DRAW_CARD, tellerChat = chat)
                 }
             }
 
-            "explain_last_card_ask_to_end_game" -> {
+            TarotSessionTellerAction.EXPLAIN_ALL_CARDS_AND_ASK_TO_END_GAME.action -> {
                 val chat = response.chat ?: return
                 _uiState.update {
                     it.copy(step = TarotSessionStep.BYE_BYE, tellerChat = chat)
                 }
             }
 
-            "terminate" -> {
+            TarotSessionTellerAction.TERMINATE.action -> {
                 val chat = response.chat ?: return
                 _uiState.update {
                     it.copy(step = TarotSessionStep.TERMINATED, tellerChat = chat)
