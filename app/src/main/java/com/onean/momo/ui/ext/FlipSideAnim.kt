@@ -23,6 +23,7 @@ import com.onean.momo.ext.safeClickable
 
 @Composable
 fun FlipSideAnim(
+    clickable: Boolean,
     frontSide: @Composable () -> Unit,
     backSide: @Composable () -> Unit,
     isOpen: Boolean,
@@ -38,6 +39,7 @@ fun FlipSideAnim(
 
     Box(modifier = modifier
         .safeClickable(
+            enabled = clickable,
             onClick = if (isOpen) {
                 onFoldClick
             } else {
@@ -63,6 +65,7 @@ private fun FlipSideAnimPreview() {
     Box(Modifier.fillMaxSize()) {
         var isOpen by remember { mutableStateOf(false) }
         FlipSideAnim(
+            clickable = true,
             frontSide = {
                 SimpleImage(
                     modifier = Modifier.size(200.dp),
@@ -99,6 +102,7 @@ private fun FlipSideAnimWithMovingPreview() {
             modifier = Modifier
                 .size(200.dp)
                 .offset { offset },
+            clickable = true,
             frontSide = {
                 SimpleImage(
                     modifier = Modifier.size(200.dp),
