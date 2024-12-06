@@ -2,7 +2,6 @@ package com.onean.momo.ui.ext
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.VectorConverter
-import androidx.compose.animation.core.animateTo
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,26 +25,24 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun MovingAnim(
-    pathIndexList: ImmutableList<IntOffset>,
-    pathTimingList: ImmutableList<Int>,
+    pathOffsetList: ImmutableList<IntOffset>,
+    pathOffsetTimingList: ImmutableList<Int>,
     currentPathIndex: Int,
     onMovingFinished: (pathIndex: Int) -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (Modifier) -> Unit
 ) {
-    val rememberedPathIndexList = remember { pathIndexList }
-    val rememberedPathTimingList = remember { pathTimingList }
     val rememberedOnMovingFinished by rememberUpdatedState(onMovingFinished)
 
     val offset = remember {
         Animatable(
-            rememberedPathIndexList[0], IntOffset.VectorConverter
+            pathOffsetList[0], IntOffset.VectorConverter
         )
     }
     LaunchedEffect(currentPathIndex) {
         offset.animateTo(
-            targetValue = rememberedPathIndexList[currentPathIndex],
-            animationSpec = tween(rememberedPathTimingList[currentPathIndex])
+            targetValue = pathOffsetList[currentPathIndex],
+            animationSpec = tween(pathOffsetTimingList[currentPathIndex])
         )
         rememberedOnMovingFinished(currentPathIndex)
     }
@@ -72,8 +69,8 @@ private fun MovingAnimPreview() {
         modifier = Modifier
             .background(Color.Blue)
             .fillMaxSize(),
-        pathIndexList = pathIndexList,
-        pathTimingList = pathTimingList,
+        pathOffsetList = pathIndexList,
+        pathOffsetTimingList = pathTimingList,
         currentPathIndex = currentPathIndex,
         onMovingFinished = { pathIndex ->
             if (pathIndex < pathIndexList.lastIndex) {
@@ -83,13 +80,9 @@ private fun MovingAnimPreview() {
         content = { modifier ->
             Box(
                 modifier = modifier
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .background(Color.Red)
-                )
-            }
+                    .size(50.dp)
+                    .background(Color.Red)
+            )
         }
     )
 }
