@@ -50,11 +50,11 @@ fun FlipSideAnim(
             rotationY = angle
         }
     ) {
-        val isFront = (angle <= 90)
-        if (isFront) {
-            frontSide()
-        } else {
+        val isBackSide = (angle <= 90)
+        if (isBackSide) {
             backSide()
+        } else {
+            frontSide()
         }
     }
 }
