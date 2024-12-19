@@ -32,11 +32,10 @@ import com.onean.momo.ui.tarot_session.TarotSessionNavigation
 import com.onean.momo.ui.tarot_session.TarotSessionScreen
 import com.onean.momo.ui.tarot_session.TarotSessionUiAction
 import com.onean.momo.ui.tarot_session.TarotSessionViewModel
+import timber.log.Timber
 
 @Composable
-fun MainNavigation(
-    modifier: Modifier = Modifier
-) {
+fun MainNavigation(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     NavHost(
         modifier = modifier,
@@ -62,11 +61,12 @@ fun MainNavigation(
                 modifier = Modifier.padding(16.dp),
                 uiState = uiState,
                 onUiAction = {
+                    Timber.d("onUiAction: $it")
                     when (it) {
                         is TarotSessionUiAction.SetupTopic -> viewModel.onTopicSelected(it.topic)
                         is TarotSessionUiAction.ReplyQuestion -> viewModel.onQuestionReply(it.chat)
                         TarotSessionUiAction.EndSession -> viewModel.onEndSession()
-                        TarotSessionUiAction.DrawCard -> viewModel.onDrawCard()
+                        TarotSessionUiAction.OnCardDraw -> viewModel.onCardDraw()
                         TarotSessionUiAction.BeGoodBoyClick -> viewModel.onBeGoodBoyClick()
                     }
                 }

@@ -8,12 +8,14 @@ import com.onean.momo.data.network.response.TarotTellerResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @HiltViewModel
 class TarotSessionViewModel @Inject constructor(
@@ -23,7 +25,7 @@ class TarotSessionViewModel @Inject constructor(
         TarotSessionUiState(
             tellerChat = "請選擇你要算的主題",
             topicList = persistentListOf("愛情", "事業", "健康"),
-            step = TarotSessionStep.SETUP_TOPIC
+            step = TarotSessionStep.SetupTopic
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -50,10 +52,12 @@ class TarotSessionViewModel @Inject constructor(
         }
     }
 
-    fun onDrawCard() {
+    fun onCardDraw() {
         viewModelScope.launch {
-            val response = tarotAiRepo.drawCard()
-            handleResponse(response)
+            val currentCardIndex = (_uiState.value.step as? TarotSessionStep.DrawAllKnownCards)?.nextCardIndex
+                ?: error("Invalid step")
+            val cardIndex = currentCardIndex + 1
+            _uiState.update { it.copy(step = TarotSessionStep.DrawAllKnownCards(nextCardIndex = cardIndex)) }
         }
     }
 
@@ -62,35 +66,30 @@ class TarotSessionViewModel @Inject constructor(
             TarotSessionTellerAction.ASK_FURTHER_QUESTION.action -> {
                 val chat = response.chat ?: return
                 _uiState.update {
-                    it.copy(step = TarotSessionStep.REPLY_QUESTION, tellerChat = chat)
-                }
-            }
-
-            TarotSessionTellerAction.ASK_TO_DRAW_ALL_CARDS.action -> {
-                val chat = response.chat ?: return
-                _uiState.update {
-                    it.copy(step = TarotSessionStep.DRAW_CARD, tellerChat = chat)
+                    it.copy(step = TarotSessionStep.ReplyQuestion, tellerChat = chat)
                 }
             }
 
             TarotSessionTellerAction.EXPLAIN_ALL_CARDS_AND_ASK_TO_END_GAME.action -> {
-                val chat = response.chat ?: return
                 _uiState.update {
-                    it.copy(step = TarotSessionStep.BYE_BYE, tellerChat = chat)
+                    it.copy(
+                        step = TarotSessionStep.DrawAllKnownCards(nextCardIndex = -1),
+                        drawCardDetailList = response.drawnTarotCardList?.toImmutableList() ?: persistentListOf()
+                    )
                 }
             }
 
             TarotSessionTellerAction.TERMINATE.action -> {
                 val chat = response.chat ?: return
                 _uiState.update {
-                    it.copy(step = TarotSessionStep.TERMINATED, tellerChat = chat)
+                    it.copy(step = TarotSessionStep.Terminated, tellerChat = chat)
                 }
             }
 
             else -> {
                 val chat = response.chat ?: return
                 _uiState.update {
-                    it.copy(step = TarotSessionStep.ERROR, tellerChat = chat)
+                    it.copy(step = TarotSessionStep.Error, tellerChat = chat)
                 }
             }
         }
@@ -98,6 +97,7 @@ class TarotSessionViewModel @Inject constructor(
 
     fun onEndSession() {
         viewModelScope.launch {
+            Timber.d("End session")
             tarotAiRepo.endSession()
             _navigation.send(TarotSessionNavigation.Opening)
         }
@@ -105,7 +105,7 @@ class TarotSessionViewModel @Inject constructor(
 
     fun onBeGoodBoyClick() {
         viewModelScope.launch {
-            _uiState.update { it.copy(step = TarotSessionStep.REPLY_QUESTION) }
+            _uiState.update { it.copy(step = TarotSessionStep.ReplyQuestion) }
         }
     }
 }

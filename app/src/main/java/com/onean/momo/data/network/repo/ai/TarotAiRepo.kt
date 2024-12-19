@@ -11,6 +11,7 @@ import com.google.ai.client.generativeai.type.content
 import com.google.ai.client.generativeai.type.generationConfig
 import com.onean.momo.BuildConfig
 import com.onean.momo.data.network.request.TaroUserRequest
+import com.onean.momo.data.network.response.TarotCardDetail
 import com.onean.momo.data.network.response.TarotTellerResponse
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -24,8 +25,6 @@ interface TarotAiRepo {
     suspend fun setupQuestionCategory(category: String): TarotTellerResponse
     suspend fun replyQuestion(reply: String): TarotTellerResponse
 
-    // FIXME: draw 3 card rather than one by one
-    suspend fun drawCard(): TarotTellerResponse
     suspend fun endSession()
 }
 
@@ -65,7 +64,14 @@ class TarotAiRepoImpl @Inject constructor(
                             "is_tarot_card_up_right" to Schema.bool("is_tarot_card_up_right", "is_tarot_card_up_right"),
                             "tarot_card_name_zh" to Schema.str("tarot_card_name_zh", "tarot_card_name_zh"),
                             "answer_from_card" to Schema.str("answer_from_card", "answer_from_card")
-                        )
+                        ),
+                        required = listOf(
+                            "tarot_card_name_en",
+                            "tarot_card_id",
+                            "is_tarot_card_up_right",
+                            "tarot_card_name_zh",
+                            "answer_from_card"
+                        ),
                     )
                 )
             )
@@ -73,7 +79,7 @@ class TarotAiRepoImpl @Inject constructor(
         systemInstruction = content {
             text(
                 "Act as a Tarot card fortune teller. Inputs are JSON strings and output are JSON. \n" +
-                    "\n" +
+                    "All conversations are Chinese. No English.\n" +
                     "All tarot cards are indexed using JSON below:\n" +
                     "{\n" +
                     "  \"all_tarot_cards\": [\n" +
@@ -159,16 +165,22 @@ class TarotAiRepoImpl @Inject constructor(
                     "}\n" +
                     "\n" +
                     "A Tarot session goes by these steps:\n" +
-                    "1.  User set question category(the json key is \"question_category\"), it may be love, career, or other topics\n" +
+                    "1.  User set question category(the JSON key is \"question_category\"), it may be love, career, or other topics\n" +
                     "2. The Fortune teller asks further questions to clarify the real question a user wants to ask.\n" +
                     "3. User reply question a teller asked\n" +
                     "4. When the Fortune teller asks enough questions, not more than 5, the teller asks the user to draw 3 Tarot cards.\n" +
                     "5. The user draws 3 Tarot cards\n" +
                     "6. The fortune teller answers the question from the drawn cards. \n" +
                     "\n" +
-                    "Input JSON format contains `action`,  \"chat\" and \"question_category\". The `action` includes: `set_question_category`, `reply_question`, `draw_all_cards`, `end_game`. The `chat` is the user input conversation text.\n" +
-                    "Output JSON contains `action`, which means the action the teller does. It would be: `ask_further_question`, `ask_to_draw_all_cards`, `explain_all_cards_and_ask_to_end_game`, \"abuse\", \"error\", \"terminate\".\n" +
+                    "Input JSON format contains `action`,  \"chat\" and \"question_category\". \n" +
+                    "The `action` includes: `set_question_category`, `reply_question`, `end_game`. \n" +
+                    "The `chat` is the user input conversation text.\n" +
+                    "\n" +
+                    "Output JSON contains `action`, which means the action the teller does. \n" +
+                    "It would be: `ask_further_question`, `explain_all_cards_and_ask_to_end_game`, \"abuse\", \"error\", \"terminate\".\n" +
                     "Action `explain_all_cards_and_ask_to_end_game` response JSON contains `drawn_tarot_cards` which is the 3 cards randomly drawn.\n" +
+                    "The `answer_from_card` should be long enough, just like a real Tarot Card teller does.\n" +
+                    "\n" +
                     "When the user says something that does not relate to Tarot fortune telling, respond action `abuse` with \"chat\", not counting in the 5-question quota.\n" +
                     "When the user action is not the predefined action, respond action \"error\" with chat.\n" +
                     "When the user keeps talking shit more than 5 times, respond action \"terminate\" to end the Tarot session."
@@ -214,16 +226,6 @@ class TarotAiRepoImpl @Inject constructor(
         return responseText?.let { responseAdapter.fromJson(it) } ?: throw IOException("response chat == null")
     }
 
-    override suspend fun drawCard(): TarotTellerResponse {
-        val request = TaroUserRequest(action = TarotSessionUserAction.DRAW_CARD.action)
-        if (currentChat == null) {
-            throw IllegalStateException("currentChat == null")
-        }
-        val responseText = currentChat?.sendMessage(requestAdapter.toJson(request))?.text
-        Timber.d("responseText: $responseText ")
-        return responseText?.let { responseAdapter.fromJson(it) } ?: throw IOException("response chat == null")
-    }
-
     override suspend fun endSession() {
         val request = TaroUserRequest(action = TarotSessionUserAction.END_GAME.action)
         if (currentChat == null) {
@@ -237,15 +239,57 @@ class TarotAiRepoImpl @Inject constructor(
 enum class TarotSessionUserAction(val action: String) {
     SET_QUESTION_CATEGORY("set_question_category"),
     REPLY_QUESTION("reply_question"),
-    DRAW_CARD("draw_all_cards"),
     END_GAME("end_game")
 }
 
 enum class TarotSessionTellerAction(val action: String) {
     ASK_FURTHER_QUESTION("ask_further_question"),
-    ASK_TO_DRAW_ALL_CARDS("ask_to_draw_all_cards"),
     EXPLAIN_ALL_CARDS_AND_ASK_TO_END_GAME("explain_all_cards_and_ask_to_end_game"),
     ABUSE("abuse"),
     ERROR("error"),
     TERMINATE("terminate")
+}
+
+class OffLineDummyTarotAiRepoImpl @Inject constructor() : TarotAiRepo {
+    override suspend fun setupQuestionCategory(category: String): TarotTellerResponse {
+        return TarotTellerResponse(
+            action = TarotSessionTellerAction.ASK_FURTHER_QUESTION.action,
+            chat = "請問你的問題是什麼？",
+            drawnTarotCardList = null,
+        )
+    }
+
+    override suspend fun replyQuestion(reply: String): TarotTellerResponse {
+        return TarotTellerResponse(
+            action = TarotSessionTellerAction.EXPLAIN_ALL_CARDS_AND_ASK_TO_END_GAME.action,
+            chat = "",
+            drawnTarotCardList = listOf(
+                TarotCardDetail(
+                    tarotCardNameZh = "愚者",
+                    tarotCardNameEn = "The Fool",
+                    tarotCardNumber = 0,
+                    isTarotCardUpRight = true,
+                    answerFromCard = "愚者代表新的開始，無憂無慮，充滿信心，但也可能是不切實際的夢想。"
+                ),
+                TarotCardDetail(
+                    tarotCardNameZh = "魔術師",
+                    tarotCardNameEn = "The Magician",
+                    tarotCardNumber = 1,
+                    isTarotCardUpRight = true,
+                    answerFromCard = "魔術師代表創造力，意志力，自信心，但也可能是欺騙，自大。"
+                ),
+                TarotCardDetail(
+                    tarotCardNameZh = "女教皇",
+                    tarotCardNameEn = "The High Priestess",
+                    tarotCardNumber = 2,
+                    isTarotCardUpRight = true,
+                    answerFromCard = "女教皇代表直覺，神秘，隱藏的知識，但也可能是虛幻，不切實際。"
+                )
+            )
+        )
+    }
+
+    override fun startChat() {}
+
+    override suspend fun endSession() {}
 }

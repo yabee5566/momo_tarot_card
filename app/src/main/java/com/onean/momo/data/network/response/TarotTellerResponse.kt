@@ -17,12 +17,10 @@ data class TarotCardDetail(
     val tarotCardNameZh: String,
     @Json(name = "tarot_card_name_en")
     val tarotCardNameEn: String,
-    @Json(name = "tarot_card_number")
+    @Json(name = "tarot_card_id")
     val tarotCardNumber: Int,
     @Json(name = "is_tarot_card_up_right")
     val isTarotCardUpRight: Boolean,
-    @Json(name = "card_description")
-    val cardDescription: String,
     @Json(name = "answer_from_card")
     val answerFromCard: String
 )

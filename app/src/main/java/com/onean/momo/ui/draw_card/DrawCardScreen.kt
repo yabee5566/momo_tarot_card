@@ -10,33 +10,34 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.onean.momo.R
 import com.onean.momo.ext.SimpleImage
 import com.onean.momo.ext.safeClickable
 import com.onean.momo.ui.ext.FlipSideAnim
+import com.onean.momo.ui.theme.Pink40
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun DrawCardScreen(
     drawnCardDrawableIdList: ImmutableList<Int>,
+    onCardDraw: () -> Unit,
+    onSayByeBye: () -> Unit,
     modifier: Modifier = Modifier,
     dummyCardCount: Int = 24
 ) {
@@ -51,7 +52,6 @@ fun DrawCardScreen(
 
         LazyVerticalGrid(
             modifier = Modifier
-                .background(Color.Yellow)
                 .height(cardSize * 3)
                 .align(Alignment.BottomCenter),
             columns = GridCells.Fixed(dummyCardCount),
@@ -62,9 +62,7 @@ fun DrawCardScreen(
                 items = chosenCardIdList,
                 key = { _, item -> item },
                 span = { _, _ ->
-                    GridItemSpan(
-                        dummyCardCount / chosenCardIdList.size
-                    )
+                    GridItemSpan(currentLineSpan = (dummyCardCount / chosenCardIdList.size))
                 }
             ) { index, _ ->
                 Box(
@@ -103,14 +101,14 @@ fun DrawCardScreen(
                     )
                 }
             }
-            itemsIndexed(dummyCardList, key = { _, item -> item }) { index, cardId ->
+            itemsIndexed(items = dummyCardList, key = { _, item -> item }) { index, cardId ->
                 SimpleImage(
                     modifier = Modifier
                         .safeClickable {
                             if (chosenCardIdList.size >= 3) {
                                 return@safeClickable
                             }
-
+                            onCardDraw()
                             val chosenList = chosenCardIdList.toMutableList() + cardId
                             val dummyList = dummyCardList.toMutableList() - cardId
                             dummyCardList = dummyList.toImmutableList()
@@ -122,19 +120,26 @@ fun DrawCardScreen(
                 )
             }
         }
-        val coroutineScope = rememberCoroutineScope()
-        Button(
-            modifier = Modifier.align(Alignment.Center),
-            onClick = {
-                coroutineScope.launch {
-                    repeat(3) {
-                        dummyCardList = dummyCardList.toMutableList().shuffled().toImmutableList()
-                        delay(400)
-                    }
-                }
+        LaunchedEffect(Unit) {
+            repeat(3) {
+                dummyCardList = dummyCardList.toMutableList().shuffled().toImmutableList()
+                delay(400)
             }
-        ) {
-            Text(text = "Shuffle")
+        }
+
+        val isLastCard by remember(chosenCardIdList) {
+            mutableStateOf(chosenCardIdList.size == 3)
+        }
+        if (isLastCard) {
+            Text(
+                modifier = Modifier
+                    .safeClickable(onClick = onSayByeBye)
+                    .align(Alignment.Center)
+                    .background(Pink40),
+                fontSize = 22.sp,
+                text = "謝謝老師～～",
+                color = Color.White
+            )
         }
     }
 }
@@ -158,6 +163,8 @@ private fun DrawCardScreenPreview() {
     )
     DrawCardScreen(
         modifier = Modifier.fillMaxSize(),
-        drawnCardDrawableIdList = drawnCardDrawableIdList
+        drawnCardDrawableIdList = drawnCardDrawableIdList,
+        onCardDraw = {},
+        onSayByeBye = {}
     )
 }

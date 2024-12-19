@@ -29,8 +29,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.onean.momo.R
+import com.onean.momo.ext.Constant.Companion.TAROT_CARD_DRAWABLE_ID_ARRAY
 import com.onean.momo.ext.SimpleImage
 import com.onean.momo.ext.safeClickable
+import com.onean.momo.ui.draw_card.DrawCardScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -46,18 +48,23 @@ fun TarotSessionScreen(
             modifier = Modifier.fillMaxSize(),
             id = R.drawable.purple_star
         )
+        val tellerChat = if (uiState.step is TarotSessionStep.DrawAllKnownCards) {
+            uiState.drawCardDetailList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard ?: ""
+        } else {
+            uiState.tellerChat
+        }
         Text(
             modifier = Modifier
                 .padding(horizontal = 13.dp)
                 .align(Alignment.Center),
-            text = uiState.tellerChat,
+            text = tellerChat,
             color = Color.White,
-            fontSize = 32.sp,
+            fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold
         )
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             when (uiState.step) {
-                TarotSessionStep.SETUP_TOPIC -> {
+                TarotSessionStep.SetupTopic -> {
                     ChooseTopicBlock(
                         topicList = listOf("Love", "Career", "Health").toImmutableList(),
                         onTopicClick = {
@@ -66,7 +73,7 @@ fun TarotSessionScreen(
                     )
                 }
 
-                TarotSessionStep.REPLY_QUESTION -> {
+                TarotSessionStep.ReplyQuestion -> {
                     val replyTextFieldState = rememberTextFieldState()
                     ReplyQuestionBlock(
                         replyTextFieldState = replyTextFieldState,
@@ -77,24 +84,22 @@ fun TarotSessionScreen(
                     )
                 }
 
-                TarotSessionStep.DRAW_CARD -> {
-                    DrawCardBlock(
-                        onDrawCardClick = {
-                            onUiAction(TarotSessionUiAction.DrawCard)
-                        }
-                    )
-                }
-
-                TarotSessionStep.BYE_BYE -> {
-                    ActionButtonBlock(
-                        actionText = "Bye Bye",
-                        onActionClick = {
+                is TarotSessionStep.DrawAllKnownCards -> {
+                    val drawnCardDrawableIdList = uiState.drawCardDetailList.map {
+                        it.tarotCardNumber.toTarotDrawableId()
+                    }.toImmutableList()
+                    DrawCardScreen(
+                        drawnCardDrawableIdList = drawnCardDrawableIdList,
+                        onCardDraw = {
+                            onUiAction(TarotSessionUiAction.OnCardDraw)
+                        },
+                        onSayByeBye = {
                             onUiAction(TarotSessionUiAction.EndSession)
                         }
                     )
                 }
 
-                TarotSessionStep.ERROR -> {
+                TarotSessionStep.Error -> {
                     ActionButtonBlock(
                         actionText = "好啦！",
                         onActionClick = {
@@ -103,7 +108,7 @@ fun TarotSessionScreen(
                     )
                 }
 
-                TarotSessionStep.TERMINATED -> {
+                TarotSessionStep.Terminated -> {
                     ActionButtonBlock(
                         actionText = "結束",
                         onActionClick = {
@@ -203,20 +208,6 @@ private fun ReplyQuestionBlock(
 }
 
 @Composable
-private fun DrawCardBlock(
-    onDrawCardClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        modifier = modifier
-            .chipModifier()
-            .safeClickable(onClick = onDrawCardClick),
-        text = "抽一張塔羅牌",
-        fontSize = 22.sp,
-    )
-}
-
-@Composable
 private fun ActionButtonBlock(
     actionText: String,
     onActionClick: () -> Unit,
@@ -232,6 +223,14 @@ private fun ActionButtonBlock(
 }
 
 @Composable
+fun Int.toTarotDrawableId(): Int {
+    val tarotCardNum = this
+    return TAROT_CARD_DRAWABLE_ID_ARRAY.getOrElse(tarotCardNum) {
+        throw IllegalArgumentException("tarotCardNum: $tarotCardNum is out of range")
+    }
+}
+
+@Composable
 @Preview
 private fun TarotSessionScreenPreview() {
     TarotSessionScreen(
@@ -241,7 +240,7 @@ private fun TarotSessionScreenPreview() {
         uiState = TarotSessionUiState(
             tellerChat = "請選擇你想問的問題類型",
             topicList = persistentListOf("Love", "Career", "Health"),
-            step = TarotSessionStep.SETUP_TOPIC
+            step = TarotSessionStep.SetupTopic
         ),
         onUiAction = {},
     )
@@ -269,10 +268,4 @@ private fun ReplyQuestionBlockPreview() {
         replyTextFieldState = TextFieldState(),
         onSubmitClick = {}
     )
-}
-
-@Preview
-@Composable
-private fun DrawCardBlockPreview() {
-    DrawCardBlock(onDrawCardClick = {})
 }
