@@ -42,7 +42,6 @@ fun DrawCardScreen(
     dummyCardCount: Int = 24
 ) {
     Box(modifier = modifier) {
-        val cardSize = 100.dp
         var dummyCardList by remember {
             mutableStateOf(
                 List(dummyCardCount) { it }.toImmutableList()
@@ -52,7 +51,7 @@ fun DrawCardScreen(
 
         LazyVerticalGrid(
             modifier = Modifier
-                .height(cardSize * 3)
+                .height(CARD_BOARD_HEIGHT)
                 .align(Alignment.BottomCenter),
             columns = GridCells.Fixed(dummyCardCount),
             horizontalArrangement = Arrangement.spacedBy((-34).dp),
@@ -67,7 +66,7 @@ fun DrawCardScreen(
             ) { index, _ ->
                 Box(
                     modifier = Modifier
-                        .height(cardSize * 2)
+                        .height(CARD_HEIGHT * 3)
                         .animateItem(),
                     contentAlignment = Alignment.TopCenter
                 ) {
@@ -86,13 +85,13 @@ fun DrawCardScreen(
                         isOpen = isOpen,
                         frontSide = {
                             SimpleImage(
-                                modifier = Modifier.size(cardSize),
+                                modifier = Modifier.size(width = CARD_WIDTH * 1.8F, height = CARD_HEIGHT * 1.8F),
                                 id = drawableId
                             )
                         },
                         backSide = {
                             SimpleImage(
-                                modifier = Modifier.size(cardSize),
+                                modifier = Modifier.size(width = CARD_WIDTH * 1.8F, height = CARD_HEIGHT * 1.8F),
                                 id = R.drawable.dummy_card_back
                             )
                         },
@@ -114,7 +113,7 @@ fun DrawCardScreen(
                             dummyCardList = dummyList.toImmutableList()
                             chosenCardIdList = chosenList.toImmutableList()
                         }
-                        .size(cardSize)
+                        .size(width = CARD_WIDTH, height = CARD_HEIGHT)
                         .animateItem(),
                     id = R.drawable.dummy_card_back
                 )
@@ -144,14 +143,9 @@ fun DrawCardScreen(
     }
 }
 
-sealed class DrawCardSessionState {
-    data object Initial : DrawCardSessionState()
-    data object Suffling : DrawCardSessionState()
-    data object Suffled : DrawCardSessionState()
-    data class FirstCardDrawn(val cardId: Int) : DrawCardSessionState()
-    data class SecondCardDrawn(val cardId: Int) : DrawCardSessionState()
-    data class ThirdCardDrawn(val cardId: Int) : DrawCardSessionState()
-}
+private val CARD_HEIGHT = 106.dp
+private val CARD_WIDTH = 60.dp
+private val CARD_BOARD_HEIGHT = CARD_HEIGHT * 4
 
 @Preview
 @Composable
