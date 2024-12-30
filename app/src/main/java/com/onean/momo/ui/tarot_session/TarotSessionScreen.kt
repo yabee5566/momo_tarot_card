@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,21 +59,31 @@ fun TarotSessionScreen(
         } else {
             uiState.tellerChat
         }
-        Column(modifier = Modifier.fillMaxSize()) {
-            Text(
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .easyPadding(top = 280.dp, horizontal = 16.dp)
+        ) {
+            Column(
                 modifier = Modifier
+                    .height(116.dp)
                     .align(Alignment.CenterHorizontally)
-                    .easyPadding(horizontal = 13.dp, top = 78.dp),
-                text = tellerChat,
-                color = Color.White,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold
-            )
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    text = tellerChat,
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
             Spacer(modifier = Modifier.weight(1F))
             when (uiState.step) {
                 TarotSessionStep.SetupTopic -> {
                     ChooseTopicBlock(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .padding(bottom = 60.dp)
+                            .align(Alignment.CenterHorizontally),
                         topicList = listOf("事業", "姻緣", "投資", "健康").toImmutableList(),
                         onTopicClick = {
                             onUiAction(TarotSessionUiAction.SetupTopic(it))
@@ -82,7 +95,9 @@ fun TarotSessionScreen(
                     val replyTextFieldState = rememberTextFieldState()
                     val localFocusManager = LocalFocusManager.current
                     ReplyQuestionBlock(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .padding(bottom = 60.dp)
+                            .align(Alignment.CenterHorizontally),
                         replyTextFieldState = replyTextFieldState,
                         onSubmitClick = {
                             onUiAction(TarotSessionUiAction.ReplyQuestion(replyTextFieldState.text.toString()))
@@ -109,6 +124,9 @@ fun TarotSessionScreen(
 
                 TarotSessionStep.Error -> {
                     ActionButtonBlock(
+                        modifier = Modifier
+                            .padding(bottom = 60.dp)
+                            .align(Alignment.CenterHorizontally),
                         actionText = "好啦！",
                         onActionClick = {
                             onUiAction(TarotSessionUiAction.BeGoodBoyClick)
@@ -222,6 +240,7 @@ private fun ActionButtonBlock(
     Text(
         modifier = modifier
             .btnModifier()
+            .padding(vertical = 8.dp, horizontal = 12.dp)
             .safeClickable(onClick = onActionClick),
         text = actionText,
         fontSize = 22.sp

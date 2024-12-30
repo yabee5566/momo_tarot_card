@@ -33,7 +33,7 @@ class TarotSessionViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
     private val _navigation = Channel<TarotSessionNavigation>()
     val navigation = _navigation.receiveAsFlow()
-    val exceptionHandler = CoroutineExceptionHandler{ _, e ->
+    val exceptionHandler = CoroutineExceptionHandler { _, e ->
         _uiState.update { it.copy(loading = false) }
         Timber.w(e)
     }

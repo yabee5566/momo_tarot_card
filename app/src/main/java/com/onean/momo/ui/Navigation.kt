@@ -16,18 +16,15 @@
 
 package com.onean.momo.ui
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.onean.momo.ext.CollectFlowWithLifecycle
-import com.onean.momo.ui.component.Loading
 import com.onean.momo.ui.tarot_opening.TarotOpeningScreen
 import com.onean.momo.ui.tarot_session.TarotSessionNavigation
 import com.onean.momo.ui.tarot_session.TarotSessionScreen
@@ -59,7 +56,6 @@ fun MainNavigation(modifier: Modifier = Modifier) {
                 }
             }
             TarotSessionScreen(
-                modifier = Modifier.padding(16.dp),
                 uiState = uiState,
                 onUiAction = {
                     Timber.d("onUiAction: $it")

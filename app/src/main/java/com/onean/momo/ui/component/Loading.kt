@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.onean.momo.ui.theme.DustYellow20
-import com.onean.momo.ui.theme.Gold
 import com.onean.momo.ui.theme.Sand
 
 @Composable
