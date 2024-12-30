@@ -1,10 +1,10 @@
 package com.onean.momo.ui.draw_card
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -27,7 +27,7 @@ import com.onean.momo.R
 import com.onean.momo.ext.SimpleImage
 import com.onean.momo.ext.safeClickable
 import com.onean.momo.ui.ext.FlipSideAnim
-import com.onean.momo.ui.theme.Pink40
+import com.onean.momo.ui.theme.btnModifier
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -132,9 +132,11 @@ fun DrawCardScreen(
         if (isLastCard) {
             Text(
                 modifier = Modifier
+                    .padding(top = 32.dp)
+                    .btnModifier()
+                    .padding(16.dp)
                     .safeClickable(onClick = onSayByeBye)
-                    .align(Alignment.Center)
-                    .background(Pink40),
+                    .align(Alignment.Center),
                 fontSize = 22.sp,
                 text = "謝謝老師～～",
                 color = Color.White

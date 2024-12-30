@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
@@ -20,9 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,8 +31,10 @@ import androidx.compose.ui.unit.sp
 import com.onean.momo.R
 import com.onean.momo.ext.Constant.Companion.TAROT_CARD_DRAWABLE_ID_ARRAY
 import com.onean.momo.ext.SimpleImage
+import com.onean.momo.ext.easyPadding
 import com.onean.momo.ext.safeClickable
 import com.onean.momo.ui.draw_card.DrawCardScreen
+import com.onean.momo.ui.theme.btnModifier
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -46,27 +48,29 @@ fun TarotSessionScreen(
     Box(modifier = modifier) {
         SimpleImage(
             modifier = Modifier.fillMaxSize(),
-            id = R.drawable.purple_star
+            id = R.drawable.tarot_teller_avatar,
         )
         val tellerChat = if (uiState.step is TarotSessionStep.DrawAllKnownCards) {
             uiState.drawCardDetailList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard ?: ""
         } else {
             uiState.tellerChat
         }
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 13.dp)
-                .align(Alignment.Center),
-            text = tellerChat,
-            color = Color.White,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .easyPadding(horizontal = 13.dp, top = 78.dp),
+                text = tellerChat,
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.weight(1F))
             when (uiState.step) {
                 TarotSessionStep.SetupTopic -> {
                     ChooseTopicBlock(
-                        topicList = listOf("Love", "Career", "Health").toImmutableList(),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        topicList = listOf("事業", "姻緣", "投資", "健康").toImmutableList(),
                         onTopicClick = {
                             onUiAction(TarotSessionUiAction.SetupTopic(it))
                         }
@@ -75,11 +79,14 @@ fun TarotSessionScreen(
 
                 TarotSessionStep.ReplyQuestion -> {
                     val replyTextFieldState = rememberTextFieldState()
+                    val localFocusManager = LocalFocusManager.current
                     ReplyQuestionBlock(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
                         replyTextFieldState = replyTextFieldState,
                         onSubmitClick = {
                             onUiAction(TarotSessionUiAction.ReplyQuestion(replyTextFieldState.text.toString()))
                             replyTextFieldState.clearText()
+                            localFocusManager.clearFocus()
                         }
                     )
                 }
@@ -131,11 +138,12 @@ private fun ChooseTopicBlock(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
+                .align(Alignment.CenterHorizontally)
+                .easyPadding(horizontal = 13.dp, top = 78.dp),
             text = "請選擇你想問的問題類型",
             color = Color.White,
-            fontSize = 18.sp
+            fontSize = 22.sp,
+            fontWeight = FontWeight.SemiBold
         )
         FlowRow(
             modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp),
@@ -144,20 +152,17 @@ private fun ChooseTopicBlock(
             topicList.forEach { topic ->
                 Text(
                     modifier = Modifier
-                        .chipModifier()
+                        .btnModifier()
+                        .padding(vertical = 8.dp, horizontal = 12.dp)
                         .safeClickable { onTopicClick(topic) },
                     text = topic,
-                    fontSize = 22.sp
+                    fontSize = 22.sp,
+                    color = Color.White
                 )
             }
         }
     }
 }
-
-private fun Modifier.chipModifier(): Modifier = this
-    .clip(CircleShape)
-    .background(Color.Gray)
-    .padding(horizontal = 4.dp, vertical = 2.dp)
 
 @Composable
 private fun ReplyQuestionBlock(
@@ -166,11 +171,6 @@ private fun ReplyQuestionBlock(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        Text(
-            text = "請回答老師的問題：",
-            color = Color.White,
-            fontSize = 18.sp
-        )
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -188,7 +188,7 @@ private fun ReplyQuestionBlock(
                     ) {
                         if (replyTextFieldState.text.isEmpty()) { // Check if text is empty
                             Text(
-                                text = "Enter your question here",
+                                text = "輸入你的回答",
                                 color = Color.Gray,
                                 fontSize = 18.sp
                             )
@@ -197,11 +197,12 @@ private fun ReplyQuestionBlock(
                     }
                 }
             )
+
             Button(
                 enabled = replyTextFieldState.text.isNotEmpty(),
                 onClick = onSubmitClick
             ) {
-                Text(text = "Submit")
+                Text(text = "送出", color = Color.White)
             }
         }
     }
@@ -215,7 +216,7 @@ private fun ActionButtonBlock(
 ) {
     Text(
         modifier = modifier
-            .chipModifier()
+            .btnModifier()
             .safeClickable(onClick = onActionClick),
         text = actionText,
         fontSize = 22.sp

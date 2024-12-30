@@ -75,7 +75,7 @@ private fun FlipSideAnimPreview() {
             backSide = {
                 SimpleImage(
                     modifier = Modifier.size(200.dp),
-                    id = R.drawable.purple_star
+                    id = R.drawable.tarot_teller_avatar
                 )
             },
             isOpen = isOpen,
@@ -112,7 +112,7 @@ private fun FlipSideAnimWithMovingPreview() {
             backSide = {
                 SimpleImage(
                     modifier = Modifier.size(200.dp),
-                    id = R.drawable.purple_star
+                    id = R.drawable.tarot_teller_avatar
                 )
             },
             isOpen = isOpen,
