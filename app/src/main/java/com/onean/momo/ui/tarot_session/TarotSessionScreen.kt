@@ -33,6 +33,7 @@ import com.onean.momo.ext.Constant.Companion.TAROT_CARD_DRAWABLE_ID_ARRAY
 import com.onean.momo.ext.SimpleImage
 import com.onean.momo.ext.easyPadding
 import com.onean.momo.ext.safeClickable
+import com.onean.momo.ui.component.Loading
 import com.onean.momo.ui.draw_card.DrawCardScreen
 import com.onean.momo.ui.theme.btnModifier
 import kotlinx.collections.immutable.ImmutableList
@@ -125,6 +126,10 @@ fun TarotSessionScreen(
                 }
             }
         }
+        Loading(
+            modifier = Modifier.align(Alignment.Center),
+            isLoading = uiState.loading
+        )
     }
 }
 

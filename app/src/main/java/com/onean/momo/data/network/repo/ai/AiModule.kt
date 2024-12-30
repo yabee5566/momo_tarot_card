@@ -10,5 +10,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class AiModule {
 
     @Binds
-    abstract fun bindTarotAiRepo(impl: OffLineDummyTarotAiRepoImpl): TarotAiRepo
+    abstract fun bindTarotAiRepo(impl: TarotAiRepoImpl): TarotAiRepo
 }

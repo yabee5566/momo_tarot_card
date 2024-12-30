@@ -27,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.onean.momo.ext.CollectFlowWithLifecycle
+import com.onean.momo.ui.component.Loading
 import com.onean.momo.ui.tarot_opening.TarotOpeningScreen
 import com.onean.momo.ui.tarot_session.TarotSessionNavigation
 import com.onean.momo.ui.tarot_session.TarotSessionScreen

@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.onean.momo.data.network.repo.ai.TarotAiRepo
 import com.onean.momo.data.network.repo.ai.TarotSessionTellerAction
 import com.onean.momo.data.network.response.TarotTellerResponse
+import com.onean.momo.ext.defaultExceptionHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +33,10 @@ class TarotSessionViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
     private val _navigation = Channel<TarotSessionNavigation>()
     val navigation = _navigation.receiveAsFlow()
+    val exceptionHandler = CoroutineExceptionHandler{ _, e ->
+        _uiState.update { it.copy(loading = false) }
+        Timber.w(e)
+    }
 
     init {
         tarotAiRepo.startChat()
@@ -39,21 +45,25 @@ class TarotSessionViewModel @Inject constructor(
     // FIXME: handle all exception and show a alert dialog
 
     fun onTopicSelected(topic: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
+            _uiState.update { it.copy(loading = true) }
             val response = tarotAiRepo.setupQuestionCategory(topic)
+            _uiState.update { it.copy(loading = false) }
             handleResponse(response)
         }
     }
 
     fun onQuestionReply(chat: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
+            _uiState.update { it.copy(loading = true) }
             val response = tarotAiRepo.replyQuestion(chat)
+            _uiState.update { it.copy(loading = false) }
             handleResponse(response)
         }
     }
 
     fun onCardDraw() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             val currentCardIndex = (_uiState.value.step as? TarotSessionStep.DrawAllKnownCards)?.nextCardIndex
                 ?: error("Invalid step")
             val cardIndex = currentCardIndex + 1
@@ -96,7 +106,7 @@ class TarotSessionViewModel @Inject constructor(
     }
 
     fun onEndSession() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             Timber.d("End session")
             tarotAiRepo.endSession()
             _navigation.send(TarotSessionNavigation.Opening)
@@ -104,7 +114,7 @@ class TarotSessionViewModel @Inject constructor(
     }
 
     fun onBeGoodBoyClick() {
-        viewModelScope.launch {
+        viewModelScope.launch(defaultExceptionHandler) {
             _uiState.update { it.copy(step = TarotSessionStep.ReplyQuestion) }
         }
     }

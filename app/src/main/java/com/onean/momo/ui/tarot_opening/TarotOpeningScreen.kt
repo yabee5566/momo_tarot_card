@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.onean.momo.R
 import com.onean.momo.ext.SimpleImage
+import com.onean.momo.ui.component.Loading
 import com.onean.momo.ui.theme.btnModifier
 
 @Composable
