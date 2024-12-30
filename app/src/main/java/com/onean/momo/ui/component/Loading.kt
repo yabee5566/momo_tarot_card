@@ -10,11 +10,12 @@ import com.onean.momo.ui.theme.DustYellow20
 import com.onean.momo.ui.theme.Sand
 
 @Composable
-fun Loading(modifier: Modifier = Modifier, isLoading: Boolean) {
+fun Loading(
+    isLoading: Boolean,
+    modifier: Modifier = Modifier
+) {
     if (isLoading) {
-        Box(
-            modifier = modifier
-        ) {
+        Box(modifier = modifier) {
             CircularProgressIndicator(
                 modifier = Modifier.size(80.dp),
                 color = Sand,

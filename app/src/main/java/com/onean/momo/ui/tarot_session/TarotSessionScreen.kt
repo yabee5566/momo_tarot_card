@@ -21,6 +21,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +49,7 @@ import com.onean.momo.ui.theme.btnModifier
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 
 @Composable
 fun TarotSessionScreen(
@@ -54,11 +62,25 @@ fun TarotSessionScreen(
             modifier = Modifier.fillMaxSize(),
             id = R.drawable.tarot_teller_avatar,
         )
-        val tellerChat = if (uiState.step is TarotSessionStep.DrawAllKnownCards) {
+        val tellerChatWhole = if (uiState.step is TarotSessionStep.DrawAllKnownCards) {
             uiState.drawCardDetailList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard ?: ""
         } else {
             uiState.tellerChat
         }
+        var tellerChatEndIndex by remember(tellerChatWhole) { mutableIntStateOf(0) }
+        val tellerChat by remember(tellerChatWhole) { derivedStateOf {
+            tellerChatWhole.substring(0, tellerChatEndIndex)
+        } }
+        LaunchedEffect(tellerChatWhole) {
+            snapshotFlow { tellerChatWhole }
+                .collect { _ ->
+                    while (tellerChatEndIndex < tellerChatWhole.length) {
+                        delay(100)
+                        tellerChatEndIndex++
+                    }
+                }
+        }
+
         Column(modifier = Modifier
             .fillMaxSize()
             .easyPadding(top = 280.dp, horizontal = 16.dp)
