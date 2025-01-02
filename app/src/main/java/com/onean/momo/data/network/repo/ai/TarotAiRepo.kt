@@ -24,7 +24,6 @@ interface TarotAiRepo {
     fun startChat()
     suspend fun setupQuestionCategory(category: String): TarotTellerResponse
     suspend fun replyQuestion(reply: String): TarotTellerResponse
-
     suspend fun endSession()
 }
 

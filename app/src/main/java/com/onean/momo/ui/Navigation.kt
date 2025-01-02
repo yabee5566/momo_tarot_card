@@ -52,7 +52,9 @@ fun MainNavigation(modifier: Modifier = Modifier) {
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             CollectFlowWithLifecycle(viewModel::navigation) {
                 when (it) {
-                    TarotSessionNavigation.Opening -> navController.navigate("tarot_opening")
+                    TarotSessionNavigation.Opening -> {
+                        navController.popBackStack() // back to tarot_opening
+                    }
                 }
             }
             TarotSessionScreen(

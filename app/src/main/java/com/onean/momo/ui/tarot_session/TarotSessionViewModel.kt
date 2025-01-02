@@ -107,7 +107,6 @@ class TarotSessionViewModel @Inject constructor(
 
     fun onEndSession() {
         viewModelScope.launch(exceptionHandler) {
-            Timber.d("End session")
             tarotAiRepo.endSession()
             _navigation.send(TarotSessionNavigation.Opening)
         }
