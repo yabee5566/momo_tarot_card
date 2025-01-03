@@ -31,8 +31,10 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinter)
     alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.google.gms.services)
 }
 
+//
 android {
     namespace = "com.onean.momo"
     compileSdk = 34
@@ -150,6 +152,8 @@ dependencies {
     // Local tests: jUnit, coroutines, Android runner
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    implementation(libs.firebase.bom)
 
     // Instrumented tests: jUnit rules and runners
 
