@@ -106,6 +106,10 @@ dependencies {
     // moshi
     ksp(libs.moshi.kotlin.codegen)
     implementation(libs.moshi)
+    implementation(libs.moshi.converter)
+
+    // Retrofit
+    implementation(libs.retrofit)
 
     // Hilt and instrumented tests.
     androidTestImplementation(libs.hilt.android.testing)

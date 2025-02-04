@@ -39,7 +39,9 @@ class TarotSessionViewModel @Inject constructor(
     }
 
     init {
-        tarotAiRepo.startChat()
+        viewModelScope.launch(exceptionHandler) {
+            tarotAiRepo.startChat()
+        }
     }
 
     // FIXME: handle all exception and show a alert dialog

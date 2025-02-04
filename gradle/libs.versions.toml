@@ -27,6 +27,7 @@ kotlinxCollectionsImmutable = "0.3.7"
 kotlinterPlugin = "4.3.0"
 composeRulesPlugin = "0.4.10"
 gemniAIClient = "0.9.0"
+retrofit = "2.11.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -69,7 +70,8 @@ kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotli
 serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 compose-rules-plugin = { module = "io.nlopez.compose.rules:ktlint", version.ref = "composeRulesPlugin" }
 gemini-ai-client = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "gemniAIClient" }
-
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+moshi-converter = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
