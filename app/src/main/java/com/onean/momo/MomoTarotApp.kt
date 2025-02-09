@@ -17,15 +17,24 @@
 package com.onean.momo
 
 import android.app.Application
+import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @HiltAndroidApp
-class MomoTarot : Application() {
+class MomoTarotApp : Application() {
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+        }
+        val backgroundScope = CoroutineScope(Dispatchers.IO)
+        backgroundScope.launch {
+            // Initialize the Google Mobile Ads SDK on a background thread.
+            MobileAds.initialize(this@MomoTarotApp) {}
         }
     }
 }

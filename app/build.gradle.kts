@@ -164,4 +164,8 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
+
+    // ad mob
+    implementation(libs.play.services.ads)
+
 }
