@@ -63,6 +63,23 @@ suspend inline fun waitUntil(
     } ?: false
 }
 
+suspend inline fun <T> fetchUntil(
+    timeoutMs: Long = 15_000L,
+    retryDelayMs: Long = 500,
+    crossinline fetch: () -> T?,
+): T? {
+    withTimeoutOrNull(timeoutMs) {
+        while (true) {
+            val item = fetch()
+            if (item != null) {
+                return@withTimeoutOrNull item
+            }
+            delay(retryDelayMs)
+        }
+    }
+    return fetch()
+}
+
 suspend fun <T> awaitAtLeast(
     delayMs: Long = 0, // 0 milliseconds
     block: suspend () -> T

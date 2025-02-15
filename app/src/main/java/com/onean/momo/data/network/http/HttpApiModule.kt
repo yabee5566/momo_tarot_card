@@ -18,6 +18,7 @@ class HttpApiModule {
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             // ip for emulator to connect to localhost
+            // .baseUrl("https://tarot-card-backend-736480400874.asia-east1.run.app")
             .baseUrl("http://10.0.2.2:8080")
             .addConverterFactory(MoshiConverterFactory.create())
             .build()

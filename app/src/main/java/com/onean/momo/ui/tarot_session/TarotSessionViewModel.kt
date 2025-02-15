@@ -49,7 +49,7 @@ class TarotSessionViewModel @Inject constructor(
     fun onTopicSelected(topic: String) {
         viewModelScope.launch(exceptionHandler) {
             _uiState.update { it.copy(loading = true) }
-            val response = tarotAiRepo.setupQuestionCategory(topic)
+            val response = tarotAiRepo.setTopic(topic)
             _uiState.update { it.copy(loading = false) }
             handleResponse(response)
         }
@@ -58,7 +58,7 @@ class TarotSessionViewModel @Inject constructor(
     fun onQuestionReply(chat: String) {
         viewModelScope.launch(exceptionHandler) {
             _uiState.update { it.copy(loading = true) }
-            val response = tarotAiRepo.replyQuestion(chat)
+            val response = tarotAiRepo.provideDetail(chat)
             _uiState.update { it.copy(loading = false) }
             handleResponse(response)
         }
@@ -75,7 +75,7 @@ class TarotSessionViewModel @Inject constructor(
 
     private fun handleResponse(response: TarotTellerResponse) {
         when (response.action) {
-            TarotSessionTellerAction.ASK_FURTHER_QUESTION.action -> {
+            TarotSessionTellerAction.ASK_DETAIL.action -> {
                 val chat = response.chat ?: return
                 _uiState.update {
                     it.copy(step = TarotSessionStep.ReplyQuestion, tellerChat = chat)

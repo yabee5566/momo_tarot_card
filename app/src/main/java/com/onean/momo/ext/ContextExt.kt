@@ -116,4 +116,12 @@ fun Context.launchPipSettingPage() = startActivity(
     )
 )
 
+fun Context.localeString(): String {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        resources.configuration.locales.get(0).toString()
+    } else {
+        resources.configuration.locale.toString()
+    }
+}
+
 private const val ACTION_PICTURE_IN_PICTURE_SETTINGS = "android.settings.PICTURE_IN_PICTURE_SETTINGS"

@@ -5,21 +5,21 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TarotTellerResponse(
-    val action: String,
+    val action: String?,
     val chat: String?,
+    val code: Int?,
+    val error: String?,
     @Json(name = "drawn_tarot_cards")
     val drawnTarotCardList: List<TarotCardDetail>?
 )
 
 @JsonClass(generateAdapter = true)
 data class TarotCardDetail(
-    @Json(name = "tarot_card_name_zh")
-    val tarotCardNameZh: String,
-    @Json(name = "tarot_card_name_en")
-    val tarotCardNameEn: String,
-    @Json(name = "tarot_card_id")
+    @Json(name = "id")
     val tarotCardNumber: Int,
-    @Json(name = "is_tarot_card_up_right")
+    @Json(name = "card_name_with_direction")
+    val cardNameWithDirection: String,
+    @Json(name = "is_tarot_card_upright")
     val isTarotCardUpRight: Boolean,
     @Json(name = "answer_from_card")
     val answerFromCard: String
