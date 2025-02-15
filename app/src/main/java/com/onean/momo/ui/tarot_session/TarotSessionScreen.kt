@@ -39,7 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.onean.momo.R
-import com.onean.momo.ext.Constant.Companion.TAROT_CARD_DRAWABLE_ID_ARRAY
 import com.onean.momo.ext.SimpleImage
 import com.onean.momo.ext.easyPadding
 import com.onean.momo.ext.safeClickable
@@ -63,7 +62,7 @@ fun TarotSessionScreen(
             id = R.drawable.tarot_teller_avatar,
         )
         val tellerChatWhole = if (uiState.step is TarotSessionStep.DrawAllKnownCards) {
-            uiState.drawCardDetailList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard ?: ""
+            uiState.drawnCardList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard ?: ""
         } else {
             uiState.tellerChat
         }
@@ -130,14 +129,11 @@ fun TarotSessionScreen(
                 }
 
                 is TarotSessionStep.DrawAllKnownCards -> {
-                    val drawnCardDrawableIdList = uiState.drawCardDetailList.map {
-                        it.tarotCardNumber.toTarotDrawableId()
-                    }.toImmutableList()
                     DrawCardScreen(
-                        drawnCardDrawableIdList = drawnCardDrawableIdList,
                         onCardDraw = {
                             onUiAction(TarotSessionUiAction.OnCardDraw)
                         },
+                        drawnCardUiModelList = uiState.drawnCardList,
                         onSayByeBye = {
                             onUiAction(TarotSessionUiAction.EndSession)
                         }
@@ -269,13 +265,7 @@ private fun ActionButtonBlock(
     )
 }
 
-@Composable
-fun Int.toTarotDrawableId(): Int {
-    val tarotCardNum = this
-    return TAROT_CARD_DRAWABLE_ID_ARRAY.getOrElse(tarotCardNum) {
-        throw IllegalArgumentException("tarotCardNum: $tarotCardNum is out of range")
-    }
-}
+
 
 @Composable
 @Preview

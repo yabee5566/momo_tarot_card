@@ -19,13 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.onean.momo.R
 import com.onean.momo.ext.SimpleImage
+import com.onean.momo.ext.conditional
 import com.onean.momo.ext.safeClickable
+import com.onean.momo.ui.draw_card.model.DrawnTarotCardUiModel
 import com.onean.momo.ui.ext.FlipSideAnim
 import com.onean.momo.ui.theme.btnModifier
 import kotlinx.collections.immutable.ImmutableList
@@ -35,8 +38,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun DrawCardScreen(
-    drawnCardDrawableIdList: ImmutableList<Int>,
     onCardDraw: () -> Unit,
+    drawnCardUiModelList: ImmutableList<DrawnTarotCardUiModel>,
     onSayByeBye: () -> Unit,
     modifier: Modifier = Modifier,
     dummyCardCount: Int = 24
@@ -75,8 +78,8 @@ fun DrawCardScreen(
                         delay(400)
                         isOpen = true
                     }
-                    val drawableId = drawnCardDrawableIdList.getOrNull(index)
-                    require(drawableId != null) {
+                    val drawnCardUiModel = drawnCardUiModelList.getOrNull(index)
+                    require(drawnCardUiModel != null) {
                         "Drawn tarot card list is not enough"
                     }
                     FlipSideAnim(
@@ -85,8 +88,12 @@ fun DrawCardScreen(
                         isOpen = isOpen,
                         frontSide = {
                             SimpleImage(
-                                modifier = Modifier.size(width = CARD_WIDTH * 1.8F, height = CARD_HEIGHT * 1.8F),
-                                id = drawableId
+                                modifier = Modifier
+                                    .size(width = CARD_WIDTH * 1.8F, height = CARD_HEIGHT * 1.8F)
+                                    .conditional(!drawnCardUiModel.isCardUpright) {
+                                        rotate(degrees = 180F)
+                                    },
+                                id = drawnCardUiModel.cardDrawableId
                             )
                         },
                         backSide = {
@@ -153,14 +160,29 @@ private val CARD_BOARD_HEIGHT = CARD_HEIGHT * 4
 @Composable
 private fun DrawCardScreenPreview() {
     val drawnCardDrawableIdList = persistentListOf(
-        R.drawable.sun_19,
-        R.drawable.moon_18,
-        R.drawable.cups06_41
+        DrawnTarotCardUiModel(
+            cardDrawableId = R.drawable.fool_0,
+            isCardUpright = false,
+            cardNameWithDirection = "愚者逆位",
+            answerFromCard = "愚者正位"
+        ),
+        DrawnTarotCardUiModel(
+            cardDrawableId = R.drawable.magician_1,
+            isCardUpright = true,
+            cardNameWithDirection = "魔術師正位",
+            answerFromCard = "魔術師正位"
+        ),
+        DrawnTarotCardUiModel(
+            cardDrawableId = R.drawable.high_priestess_2,
+            isCardUpright = true,
+            cardNameWithDirection = "女教皇正位",
+            answerFromCard = "女教皇正位"
+        )
     )
     DrawCardScreen(
         modifier = Modifier.fillMaxSize(),
-        drawnCardDrawableIdList = drawnCardDrawableIdList,
         onCardDraw = {},
+        drawnCardUiModelList = drawnCardDrawableIdList,
         onSayByeBye = {}
     )
 }

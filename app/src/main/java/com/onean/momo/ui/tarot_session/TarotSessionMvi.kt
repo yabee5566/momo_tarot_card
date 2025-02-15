@@ -1,6 +1,6 @@
 package com.onean.momo.ui.tarot_session
 
-import com.onean.momo.data.network.response.TarotCardDetail
+import com.onean.momo.ui.draw_card.model.DrawnTarotCardUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -9,7 +9,7 @@ data class TarotSessionUiState(
     val loading: Boolean = false,
     val step: TarotSessionStep,
     val topicList: ImmutableList<String>,
-    val drawCardDetailList: ImmutableList<TarotCardDetail> = persistentListOf()
+    val drawnCardList: ImmutableList<DrawnTarotCardUiModel> = persistentListOf()
 )
 
 sealed interface TarotSessionStep {

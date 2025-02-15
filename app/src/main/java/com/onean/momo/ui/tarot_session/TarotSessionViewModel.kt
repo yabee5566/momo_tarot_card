@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.onean.momo.data.network.repo.ai.TarotAiRepo
 import com.onean.momo.data.network.repo.ai.TarotSessionTellerAction
+import com.onean.momo.data.network.response.TarotCardDetail
 import com.onean.momo.data.network.response.TarotTellerResponse
 import com.onean.momo.ext.defaultExceptionHandler
+import com.onean.momo.ui.draw_card.model.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.collections.immutable.persistentListOf
@@ -86,7 +88,8 @@ class TarotSessionViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         step = TarotSessionStep.DrawAllKnownCards(nextCardIndex = -1),
-                        drawCardDetailList = response.drawnTarotCardList?.toImmutableList() ?: persistentListOf()
+                        drawnCardList = response.drawnTarotCardList?.map(TarotCardDetail::toUiModel)?.toImmutableList()
+                            ?: persistentListOf()
                     )
                 }
             }
