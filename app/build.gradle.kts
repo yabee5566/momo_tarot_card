@@ -110,6 +110,8 @@ dependencies {
 
     // Retrofit
     implementation(libs.retrofit)
+    // OkHttp logging interceptor
+    implementation(libs.logging.interceptor)
 
     // Hilt and instrumented tests.
     androidTestImplementation(libs.hilt.android.testing)
