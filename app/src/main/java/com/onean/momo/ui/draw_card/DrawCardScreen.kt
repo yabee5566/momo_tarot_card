@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,17 +19,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.onean.momo.R
 import com.onean.momo.ext.SimpleImage
 import com.onean.momo.ext.conditional
 import com.onean.momo.ext.safeClickable
+import com.onean.momo.ui.component.TarotButton
 import com.onean.momo.ui.draw_card.model.DrawnTarotCardUiModel
 import com.onean.momo.ui.ext.FlipSideAnim
-import com.onean.momo.ui.theme.btnModifier
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -137,16 +134,12 @@ fun DrawCardScreen(
             mutableStateOf(chosenCardIdList.size == 3)
         }
         if (isLastCard) {
-            Text(
+            TarotButton(
                 modifier = Modifier
                     .padding(top = 32.dp)
-                    .btnModifier()
-                    .padding(16.dp)
-                    .safeClickable(onClick = onSayByeBye)
                     .align(Alignment.Center),
-                fontSize = 22.sp,
-                text = "謝謝老師～～",
-                color = Color.White
+                text = "結束占卜",
+                onClick = onSayByeBye
             )
         }
     }

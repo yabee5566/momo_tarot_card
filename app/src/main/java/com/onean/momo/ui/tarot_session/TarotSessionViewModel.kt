@@ -2,11 +2,13 @@ package com.onean.momo.ui.tarot_session
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.onean.momo.data.network.exception.ServerResponseError
 import com.onean.momo.data.network.repo.ai.TarotAiRepo
 import com.onean.momo.data.network.repo.ai.TarotSessionTellerAction
 import com.onean.momo.data.network.response.TarotCardDetail
 import com.onean.momo.data.network.response.TarotTellerResponse
 import com.onean.momo.ext.defaultExceptionHandler
+import com.onean.momo.ui.UiError
 import com.onean.momo.ui.draw_card.model.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -35,7 +37,11 @@ class TarotSessionViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
     private val _navigation = Channel<TarotSessionNavigation>()
     val navigation = _navigation.receiveAsFlow()
-    val exceptionHandler = CoroutineExceptionHandler { _, e ->
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, e ->
+        if (e is ServerResponseError) {
+            _uiState.update { it.copy(error = UiError.FatalError) }
+        }
         _uiState.update { it.copy(loading = false) }
         Timber.w(e)
     }
@@ -73,6 +79,10 @@ class TarotSessionViewModel @Inject constructor(
             val cardIndex = currentCardIndex + 1
             _uiState.update { it.copy(step = TarotSessionStep.DrawAllKnownCards(nextCardIndex = cardIndex)) }
         }
+    }
+
+    fun onErrorDismiss() {
+        _uiState.update { it.copy(error = null) }
     }
 
     private fun handleResponse(response: TarotTellerResponse) {

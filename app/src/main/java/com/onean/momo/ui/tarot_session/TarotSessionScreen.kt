@@ -41,10 +41,9 @@ import androidx.compose.ui.unit.sp
 import com.onean.momo.R
 import com.onean.momo.ext.SimpleImage
 import com.onean.momo.ext.easyPadding
-import com.onean.momo.ext.safeClickable
 import com.onean.momo.ui.component.Loading
+import com.onean.momo.ui.component.TarotButton
 import com.onean.momo.ui.draw_card.DrawCardScreen
-import com.onean.momo.ui.theme.btnModifier
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -141,21 +140,24 @@ fun TarotSessionScreen(
                 }
 
                 TarotSessionStep.Error -> {
-                    ActionButtonBlock(
+                    TarotButton(
                         modifier = Modifier
                             .padding(bottom = 60.dp)
                             .align(Alignment.CenterHorizontally),
-                        actionText = "好啦！",
-                        onActionClick = {
+                        text = "好啦！",
+                        onClick = {
                             onUiAction(TarotSessionUiAction.BeGoodBoyClick)
                         }
                     )
                 }
 
                 TarotSessionStep.Terminated -> {
-                    ActionButtonBlock(
-                        actionText = "結束",
-                        onActionClick = {
+                    TarotButton(
+                        modifier = Modifier
+                            .padding(bottom = 60.dp)
+                            .align(Alignment.CenterHorizontally),
+                        text = "結束",
+                        onClick = {
                             onUiAction(TarotSessionUiAction.EndSession)
                         }
                     )
@@ -183,7 +185,7 @@ private fun ChooseTopicBlock(
                 .easyPadding(horizontal = 13.dp, top = 78.dp),
             text = "請選擇你想問的問題類型",
             color = Color.White,
-            fontSize = 22.sp,
+            fontSize = 19.sp,
             fontWeight = FontWeight.SemiBold
         )
         FlowRow(
@@ -191,14 +193,9 @@ private fun ChooseTopicBlock(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             topicList.forEach { topic ->
-                Text(
-                    modifier = Modifier
-                        .btnModifier()
-                        .padding(vertical = 8.dp, horizontal = 12.dp)
-                        .safeClickable { onTopicClick(topic) },
+                TarotButton(
                     text = topic,
-                    fontSize = 22.sp,
-                    color = Color.White
+                    onClick = { onTopicClick(topic) }
                 )
             }
         }
@@ -248,24 +245,6 @@ private fun ReplyQuestionBlock(
         }
     }
 }
-
-@Composable
-private fun ActionButtonBlock(
-    actionText: String,
-    onActionClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        modifier = modifier
-            .btnModifier()
-            .padding(vertical = 8.dp, horizontal = 12.dp)
-            .safeClickable(onClick = onActionClick),
-        text = actionText,
-        fontSize = 22.sp
-    )
-}
-
-
 
 @Composable
 @Preview

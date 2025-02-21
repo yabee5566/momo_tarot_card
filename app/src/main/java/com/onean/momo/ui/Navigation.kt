@@ -86,7 +86,6 @@ fun MainNavigation(modifier: Modifier = Modifier) {
                     }
                 }
             }
-
             TarotSessionScreen(
                 uiState = uiState,
                 onUiAction = {

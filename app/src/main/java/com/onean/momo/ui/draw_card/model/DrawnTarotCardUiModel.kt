@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import com.onean.momo.R
 import com.onean.momo.data.network.response.TarotCardDetail
 
-
 data class DrawnTarotCardUiModel(
     @DrawableRes val cardDrawableId: Int,
     val isCardUpright: Boolean,
