@@ -96,6 +96,7 @@ fun MainNavigation(modifier: Modifier = Modifier) {
                         TarotSessionUiAction.EndSession -> viewModel.onEndSession()
                         TarotSessionUiAction.OnCardDraw -> viewModel.onCardDraw()
                         TarotSessionUiAction.BeGoodBoyClick -> viewModel.onBeGoodBoyClick()
+                        TarotSessionUiAction.OnErrorDismiss -> viewModel.onErrorDismiss()
                     }
                 }
             )

@@ -43,6 +43,7 @@ import com.onean.momo.ext.SimpleImage
 import com.onean.momo.ext.easyPadding
 import com.onean.momo.ui.component.Loading
 import com.onean.momo.ui.component.TarotButton
+import com.onean.momo.ui.component.TipDialog
 import com.onean.momo.ui.draw_card.DrawCardScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -66,9 +67,11 @@ fun TarotSessionScreen(
             uiState.tellerChat
         }
         var tellerChatEndIndex by remember(tellerChatWhole) { mutableIntStateOf(0) }
-        val tellerChat by remember(tellerChatWhole) { derivedStateOf {
-            tellerChatWhole.substring(0, tellerChatEndIndex)
-        } }
+        val tellerChat by remember(tellerChatWhole) {
+            derivedStateOf {
+                tellerChatWhole.substring(0, tellerChatEndIndex)
+            }
+        }
         LaunchedEffect(tellerChatWhole) {
             snapshotFlow { tellerChatWhole }
                 .collect { _ ->
@@ -79,9 +82,10 @@ fun TarotSessionScreen(
                 }
         }
 
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .easyPadding(top = 280.dp, horizontal = 16.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .easyPadding(top = 280.dp, horizontal = 16.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -104,7 +108,7 @@ fun TarotSessionScreen(
                         modifier = Modifier
                             .padding(bottom = 60.dp)
                             .align(Alignment.CenterHorizontally),
-                        topicList = listOf("事業", "姻緣", "投資", "健康").toImmutableList(),
+                        topicList = listOf("感情", "事業", "財務", "健康").toImmutableList(),
                         onTopicClick = {
                             onUiAction(TarotSessionUiAction.SetupTopic(it))
                         }
@@ -138,35 +142,18 @@ fun TarotSessionScreen(
                         }
                     )
                 }
-
-                TarotSessionStep.Error -> {
-                    TarotButton(
-                        modifier = Modifier
-                            .padding(bottom = 60.dp)
-                            .align(Alignment.CenterHorizontally),
-                        text = "好啦！",
-                        onClick = {
-                            onUiAction(TarotSessionUiAction.BeGoodBoyClick)
-                        }
-                    )
-                }
-
-                TarotSessionStep.Terminated -> {
-                    TarotButton(
-                        modifier = Modifier
-                            .padding(bottom = 60.dp)
-                            .align(Alignment.CenterHorizontally),
-                        text = "結束",
-                        onClick = {
-                            onUiAction(TarotSessionUiAction.EndSession)
-                        }
-                    )
-                }
             }
         }
         Loading(
             modifier = Modifier.align(Alignment.Center),
             isLoading = uiState.loading
+        )
+    }
+    uiState.error?.let {
+        TipDialog(
+            onDismiss = { onUiAction(TarotSessionUiAction.OnErrorDismiss) },
+            onConfirmClick = { onUiAction(TarotSessionUiAction.OnErrorDismiss) },
+            content = it.toDialogContent()
         )
     }
 }

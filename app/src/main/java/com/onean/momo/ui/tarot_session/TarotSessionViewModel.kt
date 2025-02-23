@@ -38,12 +38,22 @@ class TarotSessionViewModel @Inject constructor(
     private val _navigation = Channel<TarotSessionNavigation>()
     val navigation = _navigation.receiveAsFlow()
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, e ->
-        if (e is ServerResponseError) {
-            _uiState.update { it.copy(error = UiError.FatalError) }
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        Timber.w(throwable)
+        val error = when (throwable) {
+            is ServerResponseError -> {
+                if (throwable.code == TarotAiRepo.SESSION_NOT_FOUND_CODE) {
+                    UiError.SessionNotFoundError
+                } else {
+                    UiError.ServerResponseError(throwable.message)
+                }
+            }
+
+            else -> {
+                UiError.NetworkError
+            }
         }
-        _uiState.update { it.copy(loading = false) }
-        Timber.w(e)
+        _uiState.update { it.copy(error = error, loading = false) }
     }
 
     init {
@@ -82,6 +92,9 @@ class TarotSessionViewModel @Inject constructor(
     }
 
     fun onErrorDismiss() {
+        if (_uiState.value.error is UiError.SessionNotFoundError) {
+            _navigation.trySend(TarotSessionNavigation.Opening)
+        }
         _uiState.update { it.copy(error = null) }
     }
 
@@ -104,18 +117,8 @@ class TarotSessionViewModel @Inject constructor(
                 }
             }
 
-            TarotSessionTellerAction.TERMINATE.action -> {
-                val chat = response.chat ?: return
-                _uiState.update {
-                    it.copy(step = TarotSessionStep.Terminated, tellerChat = chat)
-                }
-            }
-
             else -> {
-                val chat = response.chat ?: return
-                _uiState.update {
-                    it.copy(step = TarotSessionStep.Error, tellerChat = chat)
-                }
+                Timber.e("Unknown action: ${response.action}")
             }
         }
     }

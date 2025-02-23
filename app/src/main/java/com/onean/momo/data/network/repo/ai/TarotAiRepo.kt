@@ -1,6 +1,7 @@
 package com.onean.momo.data.network.repo.ai
 
 import android.content.Context
+import com.onean.momo.data.network.exception.SessionNotFoundError
 import com.onean.momo.data.network.repo.ai.tarot_card_backend.TarotCardApiService
 import com.onean.momo.data.network.request.ProvideDetailRequest
 import com.onean.momo.data.network.request.SetupTopicRequest
@@ -20,6 +21,10 @@ interface TarotAiRepo {
     suspend fun setTopic(topic: String): TarotTellerResponse
     suspend fun provideDetail(chat: String): TarotTellerResponse
     suspend fun endSession()
+
+    companion object {
+        const val SESSION_NOT_FOUND_CODE = 440
+    }
 }
 
 class TarotAiOnCloudRepoImpl @Inject constructor(
@@ -36,8 +41,7 @@ class TarotAiOnCloudRepoImpl @Inject constructor(
     }
 
     override suspend fun setTopic(topic: String): TarotTellerResponse {
-        val sessionId = fetchUntil { sessionIdFlow.value }
-        check(sessionId != null) { "sessionId is null" }
+        val sessionId = fetchAndValidateSessionId()
         val request = SetupTopicRequest(topic = topic)
         return tarotCardApiService.setTopic(
             sessionId = sessionId,
@@ -46,24 +50,34 @@ class TarotAiOnCloudRepoImpl @Inject constructor(
     }
 
     override suspend fun provideDetail(chat: String): TarotTellerResponse {
-        val sessionId = fetchUntil { sessionIdFlow.value }
-        check(sessionId != null) { "sessionId is null" }
+        val sessionId = fetchAndValidateSessionId()
         val request = ProvideDetailRequest(chat = chat)
         return tarotCardApiService.provideDetail(sessionId = sessionId, request = request)
     }
 
     override suspend fun endSession() {
         val sessionId = sessionIdFlow.value
-        check(sessionId != null) { "sessionId is null" }
+        if (sessionId == null) {
+            Timber.w("endSession but sessionId is null ")
+            return
+        }
         tarotCardApiService.endSession(sessionId = sessionId)
         sessionIdFlow.value = null
+    }
+
+    private suspend fun fetchAndValidateSessionId(): String {
+        val sessionId = fetchUntil { sessionIdFlow.value }
+        if (sessionId == null) {
+            throw SessionNotFoundError()
+        }
+
+        return sessionId
     }
 }
 
 enum class TarotSessionTellerAction(val action: String) {
     ASK_DETAIL("ask_detail"),
     EXPLAIN_ALL_CARDS_AND_ASK_TO_END_GAME("explain_all_cards_and_ask_to_end_game"),
-    TERMINATE("terminate")
 }
 
 class OffLineDummyTarotAiRepoImpl @Inject constructor() : TarotAiRepo {

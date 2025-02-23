@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,9 +32,10 @@ fun TarotButton(
             .padding(vertical = 13.dp, horizontal = 13.dp)
             .safeClickable(onClick = onClick),
         text = text,
+        color = Color.White,
         fontSize = 17.sp,
-        fontWeight = FontWeight.SemiBold,
-        color = Color.White
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.SemiBold
     )
 }
 

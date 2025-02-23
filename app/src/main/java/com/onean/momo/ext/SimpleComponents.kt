@@ -52,6 +52,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.onean.momo.R
+import com.onean.momo.ui.theme.Gray
 
 @Composable
 fun SimpleImage(
@@ -216,7 +217,7 @@ inline fun <T> AnimatedNullableVisibility(
 fun SimpleDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.White,
+    backgroundColor: Color = Gray,
     horizontalPadding: Dp = 20.dp,
     verticalPadding: Dp = 30.dp,
     cornerRadius: Dp = 8.dp,
