@@ -27,9 +27,9 @@ fun FlipSideAnim(
     frontSide: @Composable () -> Unit,
     backSide: @Composable () -> Unit,
     isOpen: Boolean,
-    onOpenClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onFoldClick: () -> Unit,
+    onOpenClick: () -> Unit = {},
+    onFoldClick: () -> Unit = {},
 ) {
     val angle by animateFloatAsState(
         targetValue = if (isOpen) 180F else 0F,
@@ -69,13 +69,13 @@ private fun FlipSideAnimPreview() {
             frontSide = {
                 SimpleImage(
                     modifier = Modifier.size(200.dp),
-                    id = R.drawable.dummy_card_back
+                    id = R.drawable.card_back
                 )
             },
             backSide = {
                 SimpleImage(
                     modifier = Modifier.size(200.dp),
-                    id = R.drawable.tarot_teller_avatar
+                    id = R.drawable.hanged_man_12
                 )
             },
             isOpen = isOpen,
@@ -100,19 +100,18 @@ private fun FlipSideAnimWithMovingPreview() {
     Box(modifier = Modifier.fillMaxSize()) {
         FlipSideAnim(
             modifier = Modifier
-                .size(200.dp)
+                .size(300.dp, 513.dp)
                 .offset { offset },
             clickable = true,
             frontSide = {
                 SimpleImage(
-                    modifier = Modifier.size(200.dp),
-                    id = R.drawable.dummy_card_back
+                    id = R.drawable.hanged_man_12,
                 )
             },
             backSide = {
                 SimpleImage(
-                    modifier = Modifier.size(200.dp),
-                    id = R.drawable.tarot_teller_avatar
+                    modifier = Modifier.size(803.dp / 5, 1371.dp / 5),
+                    id = R.drawable.card_back,
                 )
             },
             isOpen = isOpen,

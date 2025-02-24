@@ -2,14 +2,18 @@ package com.onean.momo.ui.draw_card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,7 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.onean.momo.R
@@ -39,7 +47,7 @@ fun DrawCardScreen(
     drawnCardUiModelList: ImmutableList<DrawnTarotCardUiModel>,
     onSayByeBye: () -> Unit,
     modifier: Modifier = Modifier,
-    dummyCardCount: Int = 24
+    dummyCardCount: Int = 12
 ) {
     Box(modifier = modifier) {
         var dummyCardList by remember {
@@ -49,12 +57,21 @@ fun DrawCardScreen(
         }
         var chosenCardIdList: ImmutableList<Int> by remember { mutableStateOf(persistentListOf()) }
 
+        val screenWidth = LocalConfiguration.current.screenWidthDp
+        val drawnCardWidth = remember { (screenWidth.dp - CARD_BOARD_PADDING * 2) / 3 }
+        val drawnCardHeight = remember { drawnCardWidth / CARD_ASPECT_RATIO }
+        val dummyCardWidth = remember { screenWidth.dp / dummyCardCount + OVERLAP_OFFSET }
+        val dummyCardHeight = remember { dummyCardWidth / CARD_ASPECT_RATIO }
+        val cardBoardHeight = remember { drawnCardHeight + dummyCardHeight + ROW_SEPARATION + DRAWN_CARD_FLIP_PADDING }
+
         LazyVerticalGrid(
+            // set so that the view would not bounce after draw card
             modifier = Modifier
-                .height(CARD_BOARD_HEIGHT)
+                .fillMaxWidth()
+                .height(cardBoardHeight)
                 .align(Alignment.BottomCenter),
             columns = GridCells.Fixed(dummyCardCount),
-            horizontalArrangement = Arrangement.spacedBy((-34).dp),
+            horizontalArrangement = Arrangement.spacedBy(-OVERLAP_OFFSET),
             verticalArrangement = Arrangement.Bottom
         ) {
             itemsIndexed(
@@ -64,11 +81,9 @@ fun DrawCardScreen(
                     GridItemSpan(currentLineSpan = (dummyCardCount / chosenCardIdList.size))
                 }
             ) { index, _ ->
-                Box(
-                    modifier = Modifier
-                        .height(CARD_HEIGHT * 3)
-                        .animateItem(),
-                    contentAlignment = Alignment.TopCenter
+                Column(
+                    modifier = Modifier.animateItem(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     var isOpen by remember { mutableStateOf(false) }
                     LaunchedEffect(Unit) {
@@ -80,28 +95,30 @@ fun DrawCardScreen(
                         "Drawn tarot card list is not enough"
                     }
                     FlipSideAnim(
-                        modifier = Modifier,
+                        modifier = Modifier.size(width = drawnCardWidth, height = drawnCardHeight),
                         clickable = false,
                         isOpen = isOpen,
                         frontSide = {
                             SimpleImage(
                                 modifier = Modifier
-                                    .size(width = CARD_WIDTH * 1.8F, height = CARD_HEIGHT * 1.8F)
+                                    .clip(RoundedCornerShape(8.dp))
                                     .conditional(!drawnCardUiModel.isCardUpright) {
                                         rotate(degrees = 180F)
-                                    },
-                                id = drawnCardUiModel.cardDrawableId
+                                    }
+                                    .graphicsLayer { rotationY = 180F }, // FIXME: this should be handled in FlipSide
+                                id = drawnCardUiModel.cardDrawableId,
+                                contentScale = ContentScale.Crop
                             )
                         },
                         backSide = {
                             SimpleImage(
-                                modifier = Modifier.size(width = CARD_WIDTH * 1.8F, height = CARD_HEIGHT * 1.8F),
-                                id = R.drawable.dummy_card_back
+                                modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                                id = R.drawable.card_back,
+                                contentScale = ContentScale.Crop
                             )
                         },
-                        onOpenClick = {},
-                        onFoldClick = {}
                     )
+                    Spacer(modifier = Modifier.height(ROW_SEPARATION))
                 }
             }
             itemsIndexed(items = dummyCardList, key = { _, item -> item }) { index, cardId ->
@@ -117,9 +134,10 @@ fun DrawCardScreen(
                             dummyCardList = dummyList.toImmutableList()
                             chosenCardIdList = chosenList.toImmutableList()
                         }
-                        .size(width = CARD_WIDTH, height = CARD_HEIGHT)
+                        .size(width = dummyCardWidth, height = dummyCardHeight)
                         .animateItem(),
-                    id = R.drawable.dummy_card_back
+                    id = R.drawable.card_back,
+                    contentScale = ContentScale.FillBounds
                 )
             }
         }
@@ -134,20 +152,28 @@ fun DrawCardScreen(
             mutableStateOf(chosenCardIdList.size == 3)
         }
         if (isLastCard) {
-            TarotButton(
-                modifier = Modifier
-                    .padding(top = 32.dp)
-                    .align(Alignment.Center),
-                text = "結束占卜",
-                onClick = onSayByeBye
-            )
+            Column(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(modifier = Modifier.heightIn(min = ROW_SEPARATION + DRAWN_CARD_FLIP_PADDING)) {
+                    TarotButton(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = "結束占卜",
+                        onClick = onSayByeBye
+                    )
+                }
+                Spacer(modifier = Modifier.height(dummyCardHeight))
+            }
         }
     }
 }
 
-private val CARD_HEIGHT = 106.dp
-private val CARD_WIDTH = 60.dp
-private val CARD_BOARD_HEIGHT = CARD_HEIGHT * 4
+private const val CARD_ASPECT_RATIO = 120 / 205F
+private val OVERLAP_OFFSET = 28.dp
+private val CARD_BOARD_PADDING = 16.dp
+private val ROW_SEPARATION = 68.dp
+private val DRAWN_CARD_FLIP_PADDING = 12.dp
 
 @Preview
 @Composable

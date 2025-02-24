@@ -32,6 +32,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MomoTarot"
         android:name=".MomoTarotApp"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
         <!-- FIXME: move value to string.xml com.onean.momo   -->
         <!-- FIXME: use real production value   -->

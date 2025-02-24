@@ -14,11 +14,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -170,7 +170,7 @@ private fun ChooseTopicBlock(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .easyPadding(horizontal = 13.dp, top = 78.dp),
-            text = "請選擇你想問的問題類型",
+            text = "請選擇您想問的問題類型",
             color = Color.White,
             fontSize = 19.sp,
             fontWeight = FontWeight.SemiBold
@@ -206,6 +206,7 @@ private fun ReplyQuestionBlock(
                 state = replyTextFieldState,
                 textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                 cursorBrush = SolidColor(Color.White),
+                lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 1, maxHeightInLines = 3),
                 decorator = { innerTextField ->
                     Box(
                         modifier = Modifier.fillMaxWidth(),
@@ -213,7 +214,7 @@ private fun ReplyQuestionBlock(
                     ) {
                         if (replyTextFieldState.text.isEmpty()) { // Check if text is empty
                             Text(
-                                text = "輸入你的回答",
+                                text = "輸入您的回答",
                                 color = Color.Gray,
                                 fontSize = 18.sp
                             )
@@ -223,12 +224,11 @@ private fun ReplyQuestionBlock(
                 }
             )
 
-            Button(
+            TarotButton(
+                text = "送出",
                 enabled = replyTextFieldState.text.isNotEmpty(),
                 onClick = onSubmitClick
-            ) {
-                Text(text = "送出", color = Color.White)
-            }
+            )
         }
     }
 }
@@ -241,7 +241,7 @@ private fun TarotSessionScreenPreview() {
             .background(Color.White)
             .fillMaxSize(),
         uiState = TarotSessionUiState(
-            tellerChat = "請選擇你想問的問題類型",
+            tellerChat = "請選擇您想問的問題類型",
             topicList = persistentListOf("Love", "Career", "Health"),
             step = TarotSessionStep.SetupTopic
         ),

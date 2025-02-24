@@ -31,7 +31,7 @@ class TarotAiOnCloudRepoImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val tarotCardApiService: TarotCardApiService
 ) : TarotAiRepo {
-    val sessionIdFlow = MutableStateFlow<String?>(null)
+    private val sessionIdFlow = MutableStateFlow<String?>(null)
 
     override suspend fun startChat() {
         val localeString = context.localeString()
@@ -92,7 +92,7 @@ class OffLineDummyTarotAiRepoImpl @Inject constructor() : TarotAiRepo {
     override suspend fun setTopic(topic: String): TarotTellerResponse {
         return emptyResponse().copy(
             action = TarotSessionTellerAction.ASK_DETAIL.action,
-            chat = "請問你的問題是什麼？",
+            chat = "請問您的問題是什麼？",
             drawnTarotCardList = null,
         )
     }

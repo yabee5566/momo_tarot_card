@@ -29,7 +29,7 @@ class TarotSessionViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         TarotSessionUiState(
-            tellerChat = "請選擇你要算的主題",
+            tellerChat = "請選擇您要算的主題",
             topicList = persistentListOf("愛情", "事業", "健康"),
             step = TarotSessionStep.SetupTopic
         )

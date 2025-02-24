@@ -3,6 +3,7 @@ package com.onean.momo.ext
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -55,7 +56,7 @@ fun Modifier.safeClickable(
     clickable(
         enabled = enabled,
         interactionSource = null,
-        indication = null,
+        indication = LocalIndication.current,
         onClick = {
             val currentTime = System.currentTimeMillis()
             if ((currentTime - lastClickTime) < debounceInterval) return@clickable

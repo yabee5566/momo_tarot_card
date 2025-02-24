@@ -35,8 +35,8 @@ sealed interface TarotSessionNavigation {
 
 fun UiError.toDialogContent(): String {
     return when (this) {
-        is UiError.ServerResponseError -> message
-        UiError.NetworkError -> "網路錯誤，請檢查網路連線"
+        is UiError.ServerResponseError -> message.ifEmpty { "伺服器錯誤，請稍後再試" }
+        UiError.NetworkError -> "伺服器錯誤，請稍後再試"
         UiError.SessionNotFoundError -> "占卜紀錄遺失，請重新開始"
     }
 }
