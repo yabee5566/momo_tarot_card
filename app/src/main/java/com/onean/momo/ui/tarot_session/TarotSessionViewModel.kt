@@ -62,8 +62,6 @@ class TarotSessionViewModel @Inject constructor(
         }
     }
 
-    // FIXME: handle all exception and show a alert dialog
-
     fun onTopicSelected(topic: String) {
         viewModelScope.launch(exceptionHandler) {
             _uiState.update { it.copy(loading = true) }

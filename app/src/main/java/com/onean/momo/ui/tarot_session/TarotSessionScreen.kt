@@ -67,7 +67,7 @@ fun TarotSessionScreen(
             uiState.tellerChat
         }
         var tellerChatEndIndex by remember(tellerChatWhole) { mutableIntStateOf(0) }
-        val tellerChat by remember(tellerChatWhole) {
+        val displayTellerChat by remember(tellerChatWhole) {
             derivedStateOf {
                 tellerChatWhole.substring(0, tellerChatEndIndex)
             }
@@ -76,10 +76,14 @@ fun TarotSessionScreen(
             snapshotFlow { tellerChatWhole }
                 .collect { _ ->
                     while (tellerChatEndIndex < tellerChatWhole.length) {
-                        delay(100)
+                        delay(85)
                         tellerChatEndIndex++
                     }
                 }
+        }
+        val displayTellerChatScrollState = rememberScrollState()
+        LaunchedEffect(displayTellerChat) {
+            displayTellerChatScrollState.animateScrollTo(displayTellerChat.length)
         }
 
         Column(
@@ -91,10 +95,12 @@ fun TarotSessionScreen(
                 modifier = Modifier
                     .height(116.dp)
                     .align(Alignment.CenterHorizontally)
-                    .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = tellerChat,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(displayTellerChatScrollState),
+                    text = displayTellerChat,
                     color = Color.White,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
@@ -241,9 +247,9 @@ private fun TarotSessionScreenPreview() {
             .background(Color.White)
             .fillMaxSize(),
         uiState = TarotSessionUiState(
-            tellerChat = "請選擇您想問的問題類型",
+            tellerChat = "請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss",
             topicList = persistentListOf("Love", "Career", "Health"),
-            step = TarotSessionStep.SetupTopic
+            step = TarotSessionStep.ReplyQuestion
         ),
         onUiAction = {},
     )
