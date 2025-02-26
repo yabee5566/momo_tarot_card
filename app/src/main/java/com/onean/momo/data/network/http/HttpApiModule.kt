@@ -1,5 +1,6 @@
 package com.onean.momo.data.network.http
 
+import com.onean.momo.BuildConfig
 import com.onean.momo.data.network.ApiConst
 import com.onean.momo.data.network.interceptor.di.LogInterceptor
 import com.onean.momo.data.network.interceptor.di.ResponseInterceptor
@@ -27,9 +28,7 @@ class HttpApiModule {
     ): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
-            // ip for emulator to connect to localhost
-            // .baseUrl("https://tarot-card-backend-736480400874.asia-east1.run.app")
-            .baseUrl("http://10.0.2.2:8080")
+            .baseUrl(BuildConfig.SERVER_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
     }

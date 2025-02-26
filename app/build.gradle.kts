@@ -58,6 +58,21 @@ android {
     }
 
     buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField(
+                type = "String",
+                name = "INTERSTITIAL_AD_UNIT_ID",
+                value = "\"ca-app-pub-1469770102032262/1886470344\""
+            )
+            buildConfigField(
+                type = "String",
+                name = "SERVER_URL",
+                value = "\"https://tarot-card-backend-736480400874.asia-northeast3.run.app\""
+            )
+        }
+
         debug {
             isMinifyEnabled = false
             buildConfigField(
@@ -65,15 +80,12 @@ android {
                 name = "INTERSTITIAL_AD_UNIT_ID",
                 value = "\"ca-app-pub-3940256099942544/1033173712\""
             )
-        }
 
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // emulator localhost as server
             buildConfigField(
                 type = "String",
-                name = "INTERSTITIAL_AD_UNIT_ID",
-                value = "\"ca-app-pub-1469770102032262/1886470344\""
+                name = "SERVER_URL",
+                value = "\"http://10.0.2.2:8080\""
             )
         }
     }
