@@ -32,6 +32,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.onean.momo.BuildConfig
 import com.onean.momo.ext.CollectFlowWithLifecycle
 import com.onean.momo.ext.localActivity
 import com.onean.momo.ui.tarot_opening.TarotOpeningScreen
@@ -64,7 +65,7 @@ fun MainNavigation(modifier: Modifier = Modifier) {
             val activity = localActivity()
             var interstitialAd: InterstitialAd? by remember { mutableStateOf(null) }
             LaunchedEffect(Unit) {
-                InterstitialAd.load(activity, "ca-app-pub-3940256099942544/1033173712", adRequest,
+                InterstitialAd.load(activity, BuildConfig.INTERSTITIAL_AD_UNIT_ID, adRequest,
                     object : InterstitialAdLoadCallback() {
                         override fun onAdFailedToLoad(adError: LoadAdError) {
                             Timber.d(adError.toString())

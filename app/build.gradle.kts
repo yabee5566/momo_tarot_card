@@ -58,9 +58,23 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        debug {
+            isMinifyEnabled = false
+            buildConfigField(
+                type = "String",
+                name = "INTERSTITIAL_AD_UNIT_ID",
+                value = "\"ca-app-pub-3940256099942544/1033173712\""
+            )
+        }
+
+        release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField(
+                type = "String",
+                name = "INTERSTITIAL_AD_UNIT_ID",
+                value = "\"ca-app-pub-1469770102032262/1886470344\""
+            )
         }
     }
 
