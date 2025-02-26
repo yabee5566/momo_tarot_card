@@ -145,7 +145,7 @@ fun SimpleAsyncImage(
                 contentDescription = null,
                 contentScale = contentScale,
                 placeholder = if (isInPreview()) {
-                    painterResource(R.drawable.ic_launcher_background)
+                    painterResource(R.drawable.ic_launcher_foreground)
                 } else {
                     placeholder
                 },

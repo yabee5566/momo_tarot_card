@@ -15,6 +15,6 @@
   -->
 
 <resources>
-    <string name="app_name">MomoTarot</string>
+    <string name="app_name">AI塔羅占卜</string>
     <string name="admob_application_id">ca-app-pub-3940256099942544~3347511713</string>
 </resources>
