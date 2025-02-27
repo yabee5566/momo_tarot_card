@@ -81,9 +81,12 @@ fun TarotSessionScreen(
                     }
                 }
         }
+
+        var displayTellerChatLines by remember(tellerChatWhole) { mutableIntStateOf(0) }
+
         val displayTellerChatScrollState = rememberScrollState()
-        LaunchedEffect(displayTellerChat) {
-            displayTellerChatScrollState.animateScrollTo(displayTellerChat.length)
+        LaunchedEffect(displayTellerChatLines) {
+            displayTellerChatScrollState.animateScrollTo(Int.MAX_VALUE)
         }
 
         Column(
@@ -98,12 +101,16 @@ fun TarotSessionScreen(
             ) {
                 Text(
                     modifier = Modifier
+                        .padding(horizontal = 20.dp)
                         .fillMaxWidth()
                         .verticalScroll(displayTellerChatScrollState),
                     text = displayTellerChat,
                     color = Color.White,
                     fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    onTextLayout = { result ->
+                        displayTellerChatLines = result.lineCount
+                    }
                 )
             }
 

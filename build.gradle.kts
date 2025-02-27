@@ -15,5 +15,3 @@
  */
 
 // Root build.gradle.kts
-plugins {
-}
