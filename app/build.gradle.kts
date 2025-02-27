@@ -17,7 +17,6 @@
 buildscript {
     dependencies {
         classpath(libs.compose.rules.plugin)
-        classpath(libs.secrets.gradle.plugin)
     }
 }
 @Suppress("DSL_SCOPE_VIOLATION") // Remove when fixed https://youtrack.jetbrains.com/issue/KTIJ-19369
@@ -30,8 +29,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinter)
-    alias(libs.plugins.secrets.gradle.plugin)
-    alias(libs.plugins.google.gms.services)
 }
 
 //
@@ -171,9 +168,6 @@ dependencies {
 
     // serialization
     implementation(libs.serialization)
-
-    // Gemini
-    implementation(libs.gemini.ai.client)
 
     // Tooling
     debugImplementation(libs.androidx.compose.ui.tooling)
