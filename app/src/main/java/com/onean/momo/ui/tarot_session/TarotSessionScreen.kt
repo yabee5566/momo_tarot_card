@@ -61,58 +61,11 @@ fun TarotSessionScreen(
             modifier = Modifier.fillMaxSize(),
             id = R.drawable.tarot_teller_avatar,
         )
-        val tellerChatWhole = if (uiState.step is TarotSessionStep.DrawAllKnownCards) {
-            uiState.drawnCardList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard ?: ""
-        } else {
-            uiState.tellerChat
-        }
-        var tellerChatEndIndex by remember(tellerChatWhole) { mutableIntStateOf(0) }
-        val displayTellerChat by remember(tellerChatWhole) {
-            derivedStateOf {
-                tellerChatWhole.substring(0, tellerChatEndIndex)
-            }
-        }
-        LaunchedEffect(tellerChatWhole) {
-            snapshotFlow { tellerChatWhole }
-                .collect { _ ->
-                    while (tellerChatEndIndex < tellerChatWhole.length) {
-                        delay(85)
-                        tellerChatEndIndex++
-                    }
-                }
-        }
-
-        var displayTellerChatLines by remember(tellerChatWhole) { mutableIntStateOf(0) }
-        val displayTellerChatScrollState = rememberScrollState()
-        LaunchedEffect(displayTellerChatLines) {
-            displayTellerChatScrollState.animateScrollTo(Int.MAX_VALUE)
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .easyPadding(top = 280.dp, horizontal = 16.dp)
+                .easyPadding(horizontal = 16.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .height(116.dp)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .fillMaxWidth()
-                        .verticalScroll(displayTellerChatScrollState),
-                    text = displayTellerChat,
-                    color = Color.White,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    onTextLayout = { result ->
-                        displayTellerChatLines = result.lineCount
-                    }
-                )
-            }
-
             Spacer(modifier = Modifier.weight(1F))
             when (uiState.step) {
                 TarotSessionStep.SetupTopic -> {
@@ -145,6 +98,7 @@ fun TarotSessionScreen(
 
                 is TarotSessionStep.DrawAllKnownCards -> {
                     DrawCardScreen(
+                        modifier = Modifier.fillMaxSize(),
                         onCardDraw = {
                             onUiAction(TarotSessionUiAction.OnCardDraw)
                         },
@@ -156,11 +110,52 @@ fun TarotSessionScreen(
                 }
             }
         }
+
+        val tellerChatWhole = if (uiState.step is TarotSessionStep.DrawAllKnownCards) {
+            uiState.drawnCardList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard ?: ""
+        } else {
+            uiState.tellerChat
+        }
+        var tellerChatEndIndex by remember(tellerChatWhole) { mutableIntStateOf(0) }
+        val displayTellerChat by remember(tellerChatWhole) {
+            derivedStateOf {
+                tellerChatWhole.substring(0, tellerChatEndIndex)
+            }
+        }
+        LaunchedEffect(tellerChatWhole) {
+            snapshotFlow { tellerChatWhole }
+                .collect { _ ->
+                    while (tellerChatEndIndex < tellerChatWhole.length) {
+                        delay(85)
+                        tellerChatEndIndex++
+                    }
+                }
+        }
+        var displayTellerChatLines by remember(tellerChatWhole) { mutableIntStateOf(0) }
+        val displayTellerChatScrollState = rememberScrollState()
+        LaunchedEffect(displayTellerChatLines) {
+            displayTellerChatScrollState.animateScrollTo(Int.MAX_VALUE)
+        }
+        Text(
+            modifier = Modifier
+                .easyPadding(top = 280.dp, horizontal = 20.dp)
+                .height(116.dp)
+                .fillMaxWidth()
+                .verticalScroll(displayTellerChatScrollState),
+            text = displayTellerChat,
+            color = Color.White,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.SemiBold,
+            onTextLayout = { result ->
+                displayTellerChatLines = result.lineCount
+            }
+        )
         Loading(
             modifier = Modifier.align(Alignment.Center),
             isLoading = uiState.loading
         )
     }
+
     uiState.error?.let {
         TipDialog(
             onDismiss = { onUiAction(TarotSessionUiAction.OnErrorDismiss) },
