@@ -10,9 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.onean.momo.ext.SimpleDialog
+import com.onean.momo.ext.isTablet
 import com.onean.momo.ui.theme.Dark
 
 @Composable
@@ -22,6 +25,13 @@ fun TipDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isTablet = isTablet()
+    val style = if (isTablet) {
+        TipDialogStyle.Tablet
+    } else {
+        TipDialogStyle.Phone
+    }
+
     SimpleDialog(
         modifier = modifier,
         onDismiss = onDismiss,
@@ -33,20 +43,44 @@ fun TipDialog(
             Text(
                 text = "提示",
                 color = Dark,
-                fontSize = 19.sp,
+                fontSize = style.titleFontSize,
                 fontWeight = FontWeight.SemiBold
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(text = content,
+            Spacer(modifier = Modifier.height(style.elementDividerHeight))
+            Text(
+                text = content,
                 color = Dark,
-                fontSize = 19.sp)
-            Spacer(modifier = Modifier.height(24.dp))
+                fontSize = style.contentFontSize
+            )
+            Spacer(modifier = Modifier.height(style.elementDividerHeight))
             TarotButton(
-                modifier = Modifier.width(200.dp),
+                modifier = Modifier.width(style.buttonWidth),
                 text = "確定",
                 onClick = onConfirmClick
             )
         }
+    }
+}
+
+private interface DialogStyle {
+    val titleFontSize: TextUnit
+    val contentFontSize: TextUnit
+    val elementDividerHeight: Dp
+    val buttonWidth: Dp
+}
+
+enum class TipDialogStyle : DialogStyle {
+    Phone {
+        override val titleFontSize = 19.sp
+        override val contentFontSize = 19.sp
+        override val elementDividerHeight = 24.dp
+        override val buttonWidth = 200.dp
+    },
+    Tablet {
+        override val titleFontSize = 38.sp
+        override val contentFontSize = 38.sp
+        override val elementDividerHeight = 48.dp
+        override val buttonWidth = 400.dp
     }
 }
 

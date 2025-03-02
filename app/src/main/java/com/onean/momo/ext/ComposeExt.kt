@@ -1,6 +1,8 @@
 package com.onean.momo.ext
+
 import android.app.Activity
 import android.content.ContextWrapper
+import android.content.res.Configuration
 import android.view.ViewGroup
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
@@ -13,6 +15,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -108,4 +111,14 @@ fun BoxWithConstraintsScope.asViewGroupLayoutParams(): ViewGroup.LayoutParams {
         ViewGroup.LayoutParams.WRAP_CONTENT
     }
     return ViewGroup.LayoutParams(width, height)
+}
+
+@Composable
+fun isTablet(): Boolean {
+    val configuration = LocalConfiguration.current
+    return if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        configuration.screenWidthDp > 840
+    } else {
+        configuration.screenWidthDp > 600
+    }
 }

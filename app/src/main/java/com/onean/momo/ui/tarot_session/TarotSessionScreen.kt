@@ -83,7 +83,6 @@ fun TarotSessionScreen(
         }
 
         var displayTellerChatLines by remember(tellerChatWhole) { mutableIntStateOf(0) }
-
         val displayTellerChatScrollState = rememberScrollState()
         LaunchedEffect(displayTellerChatLines) {
             displayTellerChatScrollState.animateScrollTo(Int.MAX_VALUE)
@@ -121,7 +120,7 @@ fun TarotSessionScreen(
                         modifier = Modifier
                             .padding(bottom = 60.dp)
                             .align(Alignment.CenterHorizontally),
-                        topicList = listOf("感情", "事業", "財務", "健康").toImmutableList(),
+                        topicList = uiState.topicList,
                         onTopicClick = {
                             onUiAction(TarotSessionUiAction.SetupTopic(it))
                         }
