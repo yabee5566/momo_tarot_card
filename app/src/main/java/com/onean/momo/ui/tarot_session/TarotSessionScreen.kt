@@ -119,7 +119,8 @@ fun TarotSessionScreen(
         }
 
         val tellerChatWhole = if (uiState.step is TarotSessionStep.DrawAllKnownCards) {
-            uiState.drawnCardList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard ?: ""
+            uiState.drawnCardList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard
+                ?: "請閉上眼睛，專注在你的問題上，當你準備好了，就抽三張牌。"
         } else {
             uiState.tellerChat
         }
