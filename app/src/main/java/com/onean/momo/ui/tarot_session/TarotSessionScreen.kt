@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.input.TextFieldLineLimits
@@ -262,15 +263,15 @@ private fun ReplyQuestionBlock(
 ) {
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val inputFontSize = if (isTablet()) {
-                36.sp
+            val style = if (isTablet()) {
+                TarotReplyQuestionStyle.Tablet
             } else {
-                18.sp
+                TarotReplyQuestionStyle.Phone
             }
             BasicTextField(
                 modifier = Modifier.weight(1F),
                 state = replyTextFieldState,
-                textStyle = TextStyle(color = Color.White, fontSize = inputFontSize),
+                textStyle = TextStyle(color = Color.White, fontSize = style.inputFontSize),
                 cursorBrush = SolidColor(Color.White),
                 lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 1, maxHeightInLines = 3),
                 decorator = { innerTextField ->
@@ -282,13 +283,14 @@ private fun ReplyQuestionBlock(
                             Text(
                                 text = "輸入您的回答",
                                 color = Color.Gray,
-                                fontSize = inputFontSize
+                                fontSize = style.inputFontSize
                             )
                         }
                         innerTextField()
                     }
                 }
             )
+            Spacer(modifier = Modifier.width(style.separatorSpacing))
             TarotButton(
                 text = "送出",
                 enabled = replyTextFieldState.text.isNotEmpty(),
@@ -296,6 +298,22 @@ private fun ReplyQuestionBlock(
             )
         }
     }
+}
+
+interface ReplyQuestionStyle {
+    val inputFontSize: TextUnit
+    val separatorSpacing: Dp
+}
+
+enum class TarotReplyQuestionStyle : ReplyQuestionStyle {
+    Phone {
+        override val inputFontSize = 18.sp
+        override val separatorSpacing = 8.dp
+    },
+    Tablet {
+        override val inputFontSize = 36.sp
+        override val separatorSpacing = 16.dp
+    },
 }
 
 @Composable
