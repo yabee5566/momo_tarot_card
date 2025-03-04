@@ -40,7 +40,7 @@ android {
         applicationId = "com.onean.momo"
         minSdk = 21
         targetSdk = 34
-        versionCode = 2
+        versionCode = 3
         versionName = "1.0.0"
 
         testInstrumentationRunner = "com.onean.momo.HiltTestRunner"
