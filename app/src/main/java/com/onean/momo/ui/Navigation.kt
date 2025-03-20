@@ -16,6 +16,7 @@
 
 package com.onean.momo.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,6 +59,9 @@ fun MainNavigation(modifier: Modifier = Modifier) {
             )
         }
         composable("tarot_session") {
+            BackHandler(enabled = true) {
+                Timber.d("consume onBack, so that user can't go back to tarot_opening")
+            }
             val viewModel: TarotSessionViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

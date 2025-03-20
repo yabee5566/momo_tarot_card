@@ -40,8 +40,8 @@ android {
         applicationId = "com.onean.momo"
         minSdk = 21
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "com.onean.momo.HiltTestRunner"
         vectorDrawables {
@@ -68,6 +68,7 @@ android {
                 name = "SERVER_URL",
                 value = "\"https://tarot-card-backend-736480400874.asia-northeast3.run.app\""
             )
+            manifestPlaceholders["usesCleartextTraffic"] = "false"
         }
 
         debug {
@@ -84,6 +85,7 @@ android {
                 name = "SERVER_URL",
                 value = "\"http://10.0.2.2:8080\""
             )
+            manifestPlaceholders["usesCleartextTraffic"] = "true"
         }
     }
 

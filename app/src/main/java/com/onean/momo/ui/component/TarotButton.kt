@@ -13,9 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.onean.momo.ext.conditional
+import com.onean.momo.ext.isTablet
 import com.onean.momo.ext.safeClickable
 import com.onean.momo.ui.theme.Gold
 import com.onean.momo.ui.theme.Gold50
@@ -30,25 +33,54 @@ fun TarotButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
+    val isTablet = isTablet()
+    val style = if (isTablet) {
+        TarotButtonStyle.Tablet
+    } else {
+        TarotButtonStyle.Phone
+    }
+
     Text(
         modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(style.cornerRadius))
             .conditional(enabled) {
                 safeClickable(onClick = onClick)
             }
             .border(
-                width = 2.dp,
+                width = style.borderWidth,
                 color = if (enabled) Gold else Gold50,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(style.cornerRadius)
             )
             .background(if (enabled) PaleWood else PaleWood50)
-            .padding(vertical = 13.dp, horizontal = 13.dp),
+            .padding(style.padding),
         text = text,
         color = if (enabled) Color.White else White50,
-        fontSize = 17.sp,
+        fontSize = style.fontSize,
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.SemiBold
     )
+}
+
+private interface ButtonStyle {
+    val cornerRadius: Dp
+    val borderWidth: Dp
+    val padding: Dp
+    val fontSize: TextUnit
+}
+
+enum class TarotButtonStyle : ButtonStyle {
+    Phone {
+        override val cornerRadius = 20.dp
+        override val borderWidth = 2.dp
+        override val padding: Dp = 13.dp
+        override val fontSize: TextUnit = 17.sp
+    },
+    Tablet {
+        override val cornerRadius = 40.dp
+        override val borderWidth = 4.dp
+        override val padding: Dp = 26.dp
+        override val fontSize: TextUnit = 34.sp
+    },
 }
 
 @Preview
