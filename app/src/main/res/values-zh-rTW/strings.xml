@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI塔羅占卜</string>
+    <string name="choose_topic_hint">請選擇您要算的主題</string>
+    <string name="close_eyes_and_prepare_to_draw">請閉上眼睛，專注在你的問題上，當你準備好了，就抽三張牌。</string>
+    <string name="end_fortune_telling">結束占卜</string>
+    <string name="what_is_your_question">請問您的問題是什麼？</string>
+    <string name="start_a_tarot_reading">進行一場塔羅占卜</string>
+    <string name="server_error_please_retry">伺服器錯誤，請稍後再試</string>
+    <string name="telling_record_missing_try_again">占卜紀錄遺失，請重新開始</string>
+    <string name="fill_in_your_reply">輸入您的回答</string>
+    <string name="submit">送出</string>
+    <string name="love">感情</string>
+    <string name="career">事業</string>
+    <string name="finance">財務</string>
+    <string name="health">健康</string>
+    <string name="tip">提示</string>
+    <string name="confirm">確定</string>
+</resources>

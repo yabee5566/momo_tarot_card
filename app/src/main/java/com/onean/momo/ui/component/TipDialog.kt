@@ -8,12 +8,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.onean.momo.R
 import com.onean.momo.ext.SimpleDialog
 import com.onean.momo.ext.isTablet
 import com.onean.momo.ui.theme.Dark
@@ -41,7 +43,7 @@ fun TipDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "提示",
+                text = stringResource(R.string.tip),
                 color = Dark,
                 fontSize = style.titleFontSize,
                 fontWeight = FontWeight.SemiBold
@@ -55,7 +57,7 @@ fun TipDialog(
             Spacer(modifier = Modifier.height(style.elementDividerHeight))
             TarotButton(
                 modifier = Modifier.width(style.buttonWidth),
-                text = "確定",
+                text = stringResource(R.string.confirm),
                 onClick = onConfirmClick
             )
         }

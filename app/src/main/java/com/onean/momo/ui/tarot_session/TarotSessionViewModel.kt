@@ -25,14 +25,10 @@ import timber.log.Timber
 
 @HiltViewModel
 class TarotSessionViewModel @Inject constructor(
-    private val tarotAiRepo: TarotAiRepo
+    private val tarotAiRepo: TarotAiRepo,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
-        TarotSessionUiState(
-            tellerChat = "請選擇您要算的主題",
-            topicList = persistentListOf("感情", "事業", "財務", "健康"),
-            step = TarotSessionStep.SetupTopic
-        )
+        TarotSessionUiState(step = TarotSessionStep.SetupTopic)
     )
     val uiState = _uiState.asStateFlow()
     private val _navigation = Channel<TarotSessionNavigation>()

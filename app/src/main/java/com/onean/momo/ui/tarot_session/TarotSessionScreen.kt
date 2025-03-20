@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
@@ -33,10 +32,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,7 +54,6 @@ import com.onean.momo.ui.component.TipDialog
 import com.onean.momo.ui.draw_card.DrawCardScreen
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 
 @Composable
@@ -81,7 +80,7 @@ fun TarotSessionScreen(
                         modifier = Modifier
                             .padding(style.bottomActionBlockPadding)
                             .align(Alignment.CenterHorizontally),
-                        topicList = uiState.topicList,
+                        topicStringResList = uiState.topicStringResList,
                         onTopicClick = {
                             onUiAction(TarotSessionUiAction.SetupTopic(it))
                         }
@@ -121,11 +120,19 @@ fun TarotSessionScreen(
             }
         }
 
-        val tellerChatWhole = if (uiState.step is TarotSessionStep.DrawAllKnownCards) {
-            uiState.drawnCardList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard
-                ?: "請閉上眼睛，專注在你的問題上，當你準備好了，就抽三張牌。"
-        } else {
-            uiState.tellerChat
+        val tellerChatWhole = when (uiState.step) {
+            is TarotSessionStep.DrawAllKnownCards -> {
+                uiState.drawnCardList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard
+                    ?: stringResource(R.string.close_eyes_and_prepare_to_draw)
+            }
+
+            is TarotSessionStep.SetupTopic -> {
+                stringResource(R.string.choose_topic_hint)
+            }
+
+            else -> {
+                uiState.tellerChat
+            }
         }
         var tellerChatEndIndex by remember(tellerChatWhole) { mutableIntStateOf(0) }
         val displayTellerChat by remember(tellerChatWhole) {
@@ -170,10 +177,11 @@ fun TarotSessionScreen(
     }
 
     uiState.error?.let {
+        val context = LocalContext.current
         TipDialog(
             onDismiss = { onUiAction(TarotSessionUiAction.OnErrorDismiss) },
             onConfirmClick = { onUiAction(TarotSessionUiAction.OnErrorDismiss) },
-            content = it.toDialogContent()
+            content = it.toDialogContent(context = context)
         )
     }
 }
@@ -206,7 +214,7 @@ enum class TarotSessionScreenStyle : SessionScreenStyle {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ChooseTopicBlock(
-    topicList: ImmutableList<String>,
+    topicStringResList: ImmutableList<Int>,
     onTopicClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -219,7 +227,7 @@ private fun ChooseTopicBlock(
     Column(modifier = modifier) {
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = "請選擇您想問的問題類型",
+            text = stringResource(R.string.choose_topic_hint),
             color = Color.White,
             fontSize = style.titleFontSize,
             fontWeight = FontWeight.SemiBold
@@ -228,10 +236,11 @@ private fun ChooseTopicBlock(
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(style.topicHorizontalSpacing),
         ) {
-            topicList.forEach { topic ->
+            topicStringResList.forEach { topicResId ->
+                val topicText = stringResource(topicResId)
                 TarotButton(
-                    text = topic,
-                    onClick = { onTopicClick(topic) }
+                    text = topicText,
+                    onClick = { onTopicClick(topicText) }
                 )
             }
         }
@@ -283,7 +292,7 @@ private fun ReplyQuestionBlock(
                     ) {
                         if (replyTextFieldState.text.isEmpty()) { // Check if text is empty
                             Text(
-                                text = "輸入您的回答",
+                                text = stringResource(R.string.fill_in_your_reply),
                                 color = Color.Gray,
                                 fontSize = style.inputFontSize
                             )
@@ -294,7 +303,7 @@ private fun ReplyQuestionBlock(
             )
             Spacer(modifier = Modifier.width(style.separatorSpacing))
             TarotButton(
-                text = "送出",
+                text = stringResource(R.string.submit),
                 enabled = replyTextFieldState.text.isNotEmpty(),
                 onClick = onSubmitClick
             )
@@ -327,7 +336,7 @@ private fun TarotSessionScreenPreview() {
             .fillMaxSize(),
         uiState = TarotSessionUiState(
             tellerChat = "請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss請選擇您想問的問題類型ssssss",
-            topicList = persistentListOf("Love", "Career", "Health"),
+            topicStringResList = persistentListOf(R.string.love, R.string.career, R.string.finance, R.string.health),
             step = TarotSessionStep.ReplyQuestion
         ),
         onUiAction = {},
@@ -341,7 +350,7 @@ private fun ChooseTopicBlockPreview() {
         modifier = Modifier
             .background(Color.Red)
             .fillMaxWidth(),
-        topicList = listOf("Love", "Career", "Health").toImmutableList(),
+        topicStringResList = persistentListOf(R.string.love, R.string.career, R.string.finance, R.string.health),
         onTopicClick = {}
     )
 }
