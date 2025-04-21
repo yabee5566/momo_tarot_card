@@ -26,7 +26,6 @@ sealed interface TarotSessionStep {
 sealed interface TarotSessionUiAction {
     data class SetupTopic(val topic: String) : TarotSessionUiAction
     data class ReplyQuestion(val chat: String) : TarotSessionUiAction
-    data object OnCardDraw : TarotSessionUiAction
     data object EndSession : TarotSessionUiAction
     data object BeGoodBoyClick : TarotSessionUiAction
     data object OnErrorDismiss : TarotSessionUiAction

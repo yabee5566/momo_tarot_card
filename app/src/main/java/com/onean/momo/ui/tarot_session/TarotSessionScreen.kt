@@ -89,6 +89,7 @@ fun TarotSessionScreen(
         } else {
             TarotSessionScreenStyle.Phone
         }
+        var selectedOpenCardIndex by remember { mutableIntStateOf(-1) }
         Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.weight(1F))
             when (uiState.step) {
@@ -125,12 +126,13 @@ fun TarotSessionScreen(
                         modifier = Modifier
                             .padding(style.drawCardScreenPadding)
                             .fillMaxSize(),
-                        onCardDraw = {
-                            onUiAction(TarotSessionUiAction.OnCardDraw)
-                        },
                         drawnCardUiModelList = uiState.drawnCardList,
                         onSayByeBye = {
                             onUiAction(TarotSessionUiAction.EndSession)
+                        },
+                        selectedOpenCardIndex = selectedOpenCardIndex,
+                        onSelectedOpenCardChanged = { cardIndex ->
+                            selectedOpenCardIndex = cardIndex
                         }
                     )
                 }
@@ -139,7 +141,7 @@ fun TarotSessionScreen(
 
         val tellerChatWhole = when (uiState.step) {
             is TarotSessionStep.DrawAllKnownCards -> {
-                uiState.drawnCardList.getOrNull(uiState.step.nextCardIndex)?.answerFromCard
+                uiState.drawnCardList.getOrNull(selectedOpenCardIndex)?.answerFromCard
                     ?: stringResource(R.string.close_eyes_and_prepare_to_draw)
             }
 

@@ -76,15 +76,6 @@ class TarotSessionViewModel @Inject constructor(
         }
     }
 
-    fun onCardDraw() {
-        viewModelScope.launch(exceptionHandler) {
-            val currentCardIndex = (_uiState.value.step as? TarotSessionStep.DrawAllKnownCards)?.nextCardIndex
-                ?: error("Invalid step")
-            val cardIndex = currentCardIndex + 1
-            _uiState.update { it.copy(step = TarotSessionStep.DrawAllKnownCards(nextCardIndex = cardIndex)) }
-        }
-    }
-
     fun onErrorDismiss() {
         if (_uiState.value.error is UiError.SessionNotFoundError) {
             _navigation.trySend(TarotSessionNavigation.Opening)
