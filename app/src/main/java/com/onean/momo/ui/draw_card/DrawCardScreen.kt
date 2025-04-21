@@ -111,8 +111,9 @@ fun DrawCardScreen(
                                         rotationY = 180F
                                     }
                                     .conditional(!drawnCardUiModel.isCardUpright) {
+                                        // FIXME: this should be handled in FlipSide
                                         rotate(degrees = 180F)
-                                    }, // FIXME: this should be handled in FlipSide
+                                    },
                                 id = drawnCardUiModel.cardDrawableId,
                                 contentScale = ContentScale.FillBounds
                             )
