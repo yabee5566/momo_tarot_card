@@ -1,5 +1,6 @@
 package com.onean.momo.ui.draw_card
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,6 +28,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.onean.momo.R
@@ -35,6 +38,7 @@ import com.onean.momo.ext.safeClickable
 import com.onean.momo.ui.component.TarotButton
 import com.onean.momo.ui.draw_card.model.DrawnTarotCardUiModel
 import com.onean.momo.ui.ext.FlipSideAnim
+import com.onean.momo.ui.theme.Gold
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -42,9 +46,10 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun DrawCardScreen(
-    onCardDraw: () -> Unit,
     drawnCardUiModelList: ImmutableList<DrawnTarotCardUiModel>,
+    selectedOpenCardIndex: Int,
     onSayByeBye: () -> Unit,
+    onSelectedOpenCardChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
     dummyCardCount: Int = 12
 ) {
@@ -60,9 +65,10 @@ fun DrawCardScreen(
                 List(dummyCardCount) { it }.toImmutableList()
             )
         }
+
         var chosenCardIdList: ImmutableList<Int> by remember { mutableStateOf(persistentListOf()) }
         LazyVerticalGrid(
-            // set so that the view would not bounce after draw card
+            // set fillMaxSize so that the view would not bounce after draw card
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.BottomCenter),
@@ -91,17 +97,23 @@ fun DrawCardScreen(
                         "Drawn tarot card list is not enough"
                     }
                     FlipSideAnim(
-                        clickable = false,
                         isOpen = isOpen,
                         frontSide = {
                             SimpleImage(
                                 modifier = Modifier
+                                    .safeClickable { onSelectedOpenCardChanged(index) }
                                     .clip(RoundedCornerShape(8.dp))
+                                    .conditional(selectedOpenCardIndex == index) {
+                                        border(width = 4.dp, color = Gold)
+                                    }
                                     .size(width = drawnCardWidth, height = drawnCardHeight)
-                                    .graphicsLayer { rotationY = 180F }
+                                    .graphicsLayer {
+                                        rotationY = 180F
+                                    }
                                     .conditional(!drawnCardUiModel.isCardUpright) {
+                                        // FIXME: this should be handled in FlipSide
                                         rotate(degrees = 180F)
-                                    }, // FIXME: this should be handled in FlipSide
+                                    },
                                 id = drawnCardUiModel.cardDrawableId,
                                 contentScale = ContentScale.FillBounds
                             )
@@ -110,6 +122,9 @@ fun DrawCardScreen(
                             SimpleImage(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(8.dp))
+                                    .conditional(selectedOpenCardIndex == index) {
+                                        border(width = 2.dp, color = Gold)
+                                    }
                                     .size(width = drawnCardWidth, height = drawnCardHeight),
                                 id = R.drawable.card_back,
                                 contentScale = ContentScale.FillBounds
@@ -134,7 +149,7 @@ fun DrawCardScreen(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .alpha(if (isLastCard) 1F else 0F),
-                        text = "結束占卜",
+                        text = stringResource(R.string.end_fortune_telling),
                         onClick = onSayByeBye
                     )
                 }
@@ -147,11 +162,11 @@ fun DrawCardScreen(
                             if (chosenCardIdList.size >= 3) {
                                 return@safeClickable
                             }
-                            onCardDraw()
                             val chosenList = chosenCardIdList.toMutableList() + cardId
                             val dummyList = dummyCardList.toMutableList() - cardId
                             dummyCardList = dummyList.toImmutableList()
                             chosenCardIdList = chosenList.toImmutableList()
+                            onSelectedOpenCardChanged(chosenList.lastIndex)
                         }
                         .size(width = dummyCardWidth, height = dummyCardHeight)
                         .animateItem(),
@@ -198,10 +213,12 @@ private fun DrawCardScreenPreview() {
         )
     )
 
+    var selectedOpenCardIndex by remember { mutableIntStateOf(-1) }
     DrawCardScreen(
         modifier = Modifier.fillMaxSize(),
-        onCardDraw = {},
         drawnCardUiModelList = drawnCardDrawableIdList,
-        onSayByeBye = {}
+        onSayByeBye = {},
+        selectedOpenCardIndex = selectedOpenCardIndex,
+        onSelectedOpenCardChanged = { selectedOpenCardIndex = it },
     )
 }

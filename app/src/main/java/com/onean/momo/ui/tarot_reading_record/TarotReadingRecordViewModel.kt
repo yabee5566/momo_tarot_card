@@ -49,7 +49,7 @@ class TarotReadingRecordViewModel @Inject constructor(
 }
 
 sealed interface TarotReadingRecordUiState {
-    object Loading : TarotReadingRecordUiState
+    data object Loading : TarotReadingRecordUiState
     data class Error(val throwable: Throwable) : TarotReadingRecordUiState
     data class Success(val data: List<String>) : TarotReadingRecordUiState
 }

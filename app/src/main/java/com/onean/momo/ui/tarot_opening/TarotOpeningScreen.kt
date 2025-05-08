@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.onean.momo.R
@@ -26,7 +27,7 @@ fun TarotOpeningScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 100.dp),
-            text = "進行一場塔羅占卜",
+            text = stringResource(R.string.start_a_tarot_reading),
             onClick = onStartTarotClick
         )
     }

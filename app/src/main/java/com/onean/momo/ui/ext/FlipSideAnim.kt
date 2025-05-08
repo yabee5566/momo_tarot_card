@@ -23,13 +23,10 @@ import com.onean.momo.ext.safeClickable
 
 @Composable
 fun FlipSideAnim(
-    clickable: Boolean,
     frontSide: @Composable () -> Unit,
     backSide: @Composable () -> Unit,
     isOpen: Boolean,
     modifier: Modifier = Modifier,
-    onOpenClick: () -> Unit = {},
-    onFoldClick: () -> Unit = {},
 ) {
     val angle by animateFloatAsState(
         targetValue = if (isOpen) 180F else 0F,
@@ -38,14 +35,6 @@ fun FlipSideAnim(
     )
 
     Box(modifier = modifier
-        .safeClickable(
-            enabled = clickable,
-            onClick = if (isOpen) {
-                onFoldClick
-            } else {
-                onOpenClick
-            }
-        )
         .graphicsLayer {
             rotationY = angle
         }
@@ -65,7 +54,9 @@ private fun FlipSideAnimPreview() {
     Box(Modifier.fillMaxSize()) {
         var isOpen by remember { mutableStateOf(false) }
         FlipSideAnim(
-            clickable = true,
+            modifier = Modifier.safeClickable {
+                isOpen = !isOpen
+            },
             frontSide = {
                 SimpleImage(
                     modifier = Modifier.size(200.dp),
@@ -79,8 +70,6 @@ private fun FlipSideAnimPreview() {
                 )
             },
             isOpen = isOpen,
-            onOpenClick = { isOpen = true },
-            onFoldClick = { isOpen = false }
         )
     }
 }
@@ -100,9 +89,9 @@ private fun FlipSideAnimWithMovingPreview() {
     Box(modifier = Modifier.fillMaxSize()) {
         FlipSideAnim(
             modifier = Modifier
+                .safeClickable { isOpen = !isOpen }
                 .size(300.dp, 513.dp)
                 .offset { offset },
-            clickable = true,
             frontSide = {
                 SimpleImage(
                     id = R.drawable.hanged_man_12,
@@ -115,8 +104,6 @@ private fun FlipSideAnimWithMovingPreview() {
                 )
             },
             isOpen = isOpen,
-            onOpenClick = { isOpen = true },
-            onFoldClick = { isOpen = false }
         )
     }
 }

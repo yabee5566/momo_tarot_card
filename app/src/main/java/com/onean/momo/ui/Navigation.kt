@@ -99,7 +99,6 @@ fun MainNavigation(modifier: Modifier = Modifier) {
                         is TarotSessionUiAction.SetupTopic -> viewModel.onTopicSelected(it.topic)
                         is TarotSessionUiAction.ReplyQuestion -> viewModel.onQuestionReply(it.chat)
                         TarotSessionUiAction.EndSession -> viewModel.onEndSession()
-                        TarotSessionUiAction.OnCardDraw -> viewModel.onCardDraw()
                         TarotSessionUiAction.BeGoodBoyClick -> viewModel.onBeGoodBoyClick()
                         TarotSessionUiAction.OnErrorDismiss -> viewModel.onErrorDismiss()
                     }

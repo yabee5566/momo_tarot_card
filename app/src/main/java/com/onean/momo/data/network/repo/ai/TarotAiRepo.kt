@@ -106,19 +106,22 @@ class OffLineDummyTarotAiRepoImpl @Inject constructor() : TarotAiRepo {
                     cardNameWithDirection = "The Fool (Upright)",
                     tarotCardNumber = 0,
                     isTarotCardUpRight = true,
-                    answerFromCard = "愚者代表新的開始，無憂無慮，充滿信心，但也可能是不切實際的夢想。"
+                    answerFromCard = "愚者代表新的開始，無憂無慮，充滿信心，但也可能是不切實際的夢想。愚者代表新的開始，無憂無慮，" +
+                        "充滿信心，但也可能是不切實際的夢想。愚者代表新的開始，無憂無慮，充滿信心，但也可能是不切實際的夢想。"
                 ),
                 TarotCardDetail(
                     cardNameWithDirection = "The Magician (Upright)",
                     tarotCardNumber = 1,
                     isTarotCardUpRight = true,
-                    answerFromCard = "魔術師代表創造力，意志力，自信心，但也可能是欺騙，自大。"
+                    answerFromCard = "魔術師代表創造力，意志力，自信心，但也可能是欺騙，自大。魔術師代表創造力，意志力，自信心，" +
+                        "但也可能是欺騙，自大。魔術師代表創造力，意志力，自信心，但也可能是欺騙，自大。"
                 ),
                 TarotCardDetail(
                     cardNameWithDirection = "The High Priestess (Upright)",
                     tarotCardNumber = 2,
                     isTarotCardUpRight = true,
-                    answerFromCard = "女教皇代表直覺，神秘，隱藏的知識，但也可能是虛幻，不切實際。"
+                    answerFromCard = "女教皇代表直覺，神秘，隱藏的知識，但也可能是虛幻，不切實際。女教皇代表直覺，神秘，隱藏的知識，" +
+                        "但也可能是虛幻，不切實際。女教皇代表直覺，神秘，隱藏的知識，但也可能是虛幻，不切實際。"
                 )
             )
         )
