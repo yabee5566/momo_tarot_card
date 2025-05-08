@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI Tarot Lezing</string>
+    <string name="choose_topic_hint">Kies het onderwerp waarover je een vraag wilt stellen</string>
+    <string name="close_eyes_and_prepare_to_draw">Sluit je ogen, concentreer je op je vraag en trek drie kaarten wanneer je er klaar voor bent.</string>
+    <string name="end_fortune_telling">Beëindig Tarot Lezing</string>
+    <string name="what_is_your_question">Wat is je vraag?</string>
+    <string name="start_a_tarot_reading">Begin een Tarot Lezing</string>
+    <string name="server_error_please_retry">Serverfout, probeer het later opnieuw</string>
+    <string name="telling_record_missing_try_again">Tarot lezing record ontbreekt, begin opnieuw</string>
+    <string name="fill_in_your_reply">Vul je antwoord in</string>
+    <string name="submit">Verzenden</string>
+    <string name="love">Liefde</string>
+    <string name="career">Carrière</string>
+    <string name="finance">Financiën</string>
+    <string name="health">Gezondheid</string>
+    <string name="tip">Tip</string>
+    <string name="confirm">Bevestigen</string>
+</resources>

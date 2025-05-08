@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AIタロットリーディング</string>
+    <string name="choose_topic_hint">質問したいトピックを選んでください</string>
+    <string name="close_eyes_and_prepare_to_draw">目を閉じて質問に集中し、準備ができたら3枚のカードを引いてください。</string>
+    <string name="end_fortune_telling">タロット占いを終了する</string>
+    <string name="what_is_your_question">あなたの質問は何ですか？</string>
+    <string name="start_a_tarot_reading">タロットリーディングを始める</string>
+    <string name="server_error_please_retry">サーバーエラーが発生しました。後でもう一度お試しください。</string>
+    <string name="telling_record_missing_try_again">タロットリーディングの記録が見つかりません。もう一度やり直してください。</string>
+    <string name="fill_in_your_reply">返信を入力してください</string>
+    <string name="submit">送信</string>
+    <string name="love">愛</string>
+    <string name="career">キャリア</string>
+    <string name="finance">財務</string>
+    <string name="health">健康</string>
+    <string name="tip">ヒント</string>
+    <string name="confirm">確認</string>
+</resources>

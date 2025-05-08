@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KI Tarot-Lesung</string>
+    <string name="choose_topic_hint">Bitte wählen Sie das Thema, zu dem Sie eine Frage stellen möchten</string>
+    <string name="close_eyes_and_prepare_to_draw">Bitte schließen Sie die Augen, konzentrieren Sie sich auf Ihre Frage und ziehen Sie drei Karten, wenn Sie bereit sind.</string>
+    <string name="end_fortune_telling">Tarot-Lesung beenden</string>
+    <string name="what_is_your_question">Was ist Ihre Frage?</string>
+    <string name="start_a_tarot_reading">Eine Tarot-Lesung starten</string>
+    <string name="server_error_please_retry">Serverfehler, bitte versuchen Sie es später erneut</string>
+    <string name="telling_record_missing_try_again">Tarot-Lesungsprotokoll fehlt, bitte starten Sie erneut</string>
+    <string name="fill_in_your_reply">Geben Sie Ihre Antwort ein</string>
+    <string name="submit">Einreichen</string>
+    <string name="love">Liebe</string>
+    <string name="career">Karriere</string>
+    <string name="finance">Finanzen</string>
+    <string name="health">Gesundheit</string>
+    <string name="tip">Tipp</string>
+    <string name="confirm">Bestätigen</string>
+</resources>

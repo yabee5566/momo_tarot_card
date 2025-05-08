@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lecture de Tarot AI</string>
+    <string name="choose_topic_hint">Veuillez choisir le sujet que vous souhaitez poser</string>
+    <string name="close_eyes_and_prepare_to_draw">Fermez les yeux, concentrez-vous sur votre question et tirez trois cartes lorsque vous êtes prêt.</string>
+    <string name="end_fortune_telling">Fin de la lecture de tarot</string>
+    <string name="what_is_your_question">Quelle est votre question ?</string>
+    <string name="start_a_tarot_reading">Commencer une lecture de tarot</string>
+    <string name="server_error_please_retry">Erreur du serveur, veuillez réessayer plus tard</string>
+    <string name="telling_record_missing_try_again">Enregistrement de lecture de tarot manquant, veuillez recommencer</string>
+    <string name="fill_in_your_reply">Remplissez votre réponse</string>
+    <string name="submit">Soumettre</string>
+    <string name="love">Amour</string>
+    <string name="career">Carriere</string>
+    <string name="finance">Finance</string>
+    <string name="health">Santé</string>
+    <string name="tip">Conseil</string>
+    <string name="confirm">Confirmer</string>
+</resources>

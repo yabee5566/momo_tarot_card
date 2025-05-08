@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI 타로 리딩</string>
+    <string name="choose_topic_hint">질문하고 싶은 주제를 선택하세요</string>
+    <string name="close_eyes_and_prepare_to_draw">눈을 감고 질문에 집중한 후 준비가 되면 세 장의 카드를 뽑으세요.</string>
+    <string name="end_fortune_telling">타로 리딩 종료</string>
+    <string name="what_is_your_question">당신의 질문은 무엇인가요?</string>
+    <string name="start_a_tarot_reading">타로 리딩 시작</string>
+    <string name="server_error_please_retry">서버 오류가 발생했습니다. 나중에 다시 시도하세요.</string>
+    <string name="telling_record_missing_try_again">타로 리딩 기록이 없습니다. 다시 시작하세요.</string>
+    <string name="fill_in_your_reply">답변을 입력하세요</string>
+    <string name="submit">제출</string>
+    <string name="love">사랑</string>
+    <string name="career">커리어</string>
+    <string name="finance">재정</string>
+    <string name="health">건강</string>
+    <string name="tip">팁</string>
+    <string name="confirm">확인</string>
+</resources>

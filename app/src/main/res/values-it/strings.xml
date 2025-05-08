@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lettura dei Tarocchi AI</string>
+    <string name="choose_topic_hint">Per favore, scegli l\'argomento su cui vuoi fare una domanda</string>
+    <string name="close_eyes_and_prepare_to_draw">Chiudi gli occhi, concentrati sulla tua domanda e pesca tre carte quando sei pronto.</string>
+    <string name="end_fortune_telling">Termina la lettura dei tarocchi</string>
+    <string name="what_is_your_question">Qual è la tua domanda?</string>
+    <string name="start_a_tarot_reading">Inizia una lettura dei tarocchi</string>
+    <string name="server_error_please_retry">Errore del server, per favore riprova più tardi</string>
+    <string name="telling_record_missing_try_again">Registro della lettura dei tarocchi mancante, per favore ricomincia</string>
+    <string name="fill_in_your_reply">Compila la tua risposta</string>
+    <string name="submit">Invia</string>
+    <string name="love">Amore</string>
+    <string name="career">Carriera</string>
+    <string name="finance">Finanze</string>
+    <string name="health">Salute</string>
+    <string name="tip">Consiglio</string>
+    <string name="confirm">Conferma</string>
+</resources>
